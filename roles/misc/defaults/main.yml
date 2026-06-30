@@ -1,0 +1,44 @@
+---
+misc_system_timezone: 'Etc/UTC'
+misc_system_packages:
+  - neovim
+  - ranger
+  - stow
+  - curl
+  - wget
+  - git
+  - zsh
+  - bat
+  - tar
+  # - skim
+
+misc_sysctl_config:
+  fs.inotify.max_queued_events: 65536
+  fs.inotify.max_user_watches: 524288
+  fs.inotify.max_user_instances: 8192
+  # Prevent packet loss
+  net.core.netdev_max_backlog: 30000 # Help prevent packet loss during high traffic periods.
+  # Network Keepalive Optimizations
+  net.ipv4.tcp_keepalive_probes: 5 # TCP keepalive probes to detect if a connection is still alive.
+  net.ipv4.tcp_keepalive_intvl: 30 # TCP keepalive interval between probes to detect if a connection is still alive.
+  net.ipv4.tcp_keepalive_time: 300 # TCP keepalive interval in seconds to detect if a connection is still alive.
+
+misc_dots_inject_skel: false
+misc_dots_vcs_url: "https://github.com/TkPegatron/dotfiles.git"
+misc_dots_branch: main
+misc_dots_accept_hostkey: false
+misc_dots_workdir: ".dotfiles" # Path is relative to user's home
+misc_dots_stow_package: "home"
+
+misc_bin_pfx: "/usr/local/bin/"
+misc_binaries:
+  - name: zellij
+    src_url: "https://github.com/zellij-org/zellij/releases/download/v0.39.2/zellij-{{ ansible_facts.architecture }}-unknown-linux-musl.tar.gz"
+  - name: starship
+    src_url: "https://github.com/starship/starship/releases/download/v1.18.2/starship-{{ ansible_facts.architecture }}-unknown-linux-gnu.tar.gz"
+  - name: lsd
+    src_url: "https://github.com/lsd-rs/lsd/releases/download/v1.1.2/lsd-v1.1.2-{{ ansible_facts.architecture }}-unknown-linux-gnu.tar.gz"
+    include: "lsd-v1.1.2-x86_64-unknown-linux-gnu/lsd"
+    extra_opts:
+      - --transform
+      - "s/lsd-v1.1.2-x86_64-unknown-linux-gnu//"

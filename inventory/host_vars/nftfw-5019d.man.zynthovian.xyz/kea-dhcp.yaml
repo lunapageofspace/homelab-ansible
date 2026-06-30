@@ -178,8 +178,8 @@ kea_dhcp4_config:
         -   hostname: 5019d-ipmi.man.zynthovian.xyz
             hw-address: 3c:ec:ef:41:7c:be
             ip-address: 172.22.1.3
-        -   hostname: elp-workstation.lan.zynthovian.xyz
-            hw-address: 98:B7:85:00:97:E1
+        -   hostname: legion.zynthovian.xyz
+            hw-address: 98:b7:85:00:2e:d4
             ip-address: 172.22.1.5
         subnet: 172.22.1.0/25
     valid-lifetime: 43200

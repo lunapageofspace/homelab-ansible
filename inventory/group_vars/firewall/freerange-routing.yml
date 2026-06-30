@@ -20,6 +20,12 @@ frr_daemons:
   ripngd: false
   zebra: true
 
+frr_static:
+  172.22.0.0/25:
+    vm-br-vl10
+  172.22.1.0/25:
+    vm-br-vl20
+
 frr_bgp:
   asns:
     64627:

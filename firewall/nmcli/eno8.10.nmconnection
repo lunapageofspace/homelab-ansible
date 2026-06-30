@@ -1,0 +1,17 @@
+[connection]
+id=eno8.10
+uuid=26880f54-ba0b-4710-bbe7-8c015775a959
+type=vlan
+interface-name=eno8.10
+master=vm-br-vl10
+slave-type=bridge
+timestamp=1682725382
+
+[ethernet]
+
+[vlan]
+flags=1
+id=10
+parent=eno8
+
+[bridge-port]

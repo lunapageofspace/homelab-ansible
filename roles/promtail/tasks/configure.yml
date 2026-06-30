@@ -1,0 +1,15 @@
+---
+
+- name: create /etc/promtail
+  ansible.builtin.file:
+    name: /etc/promtail
+    state: directory
+  become: true
+
+- name: copy promtail.yaml
+  ansible.builtin.copy:
+    content: "{{ lookup('template', 'templates/promtail.yaml') }}"
+    dest: /etc/promtail/promtail.yaml
+  become: true
+  notify:
+    - restart_promtail

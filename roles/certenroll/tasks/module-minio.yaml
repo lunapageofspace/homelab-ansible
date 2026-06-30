@@ -1,0 +1,60 @@
+---
+- name: Install Dependencies
+  ansible.builtin.dnf:
+    name: python3-cryptography
+    state: present
+
+- name: Create directory tree
+  ansible.builtin.file:
+    path: /home/minio/.minio/certs/CAs/
+    state: directory
+    owner: minio
+    group: minio
+    mode: "0700"
+
+- name: Copy default certificate authority
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: /home/minio/.minio/certs/CAs/{{ item.name }}.crt
+    group: root
+    owner: root
+    mode: "0644"
+    validate: openssl x509 -inform PEM -in %s -noout
+  when: ("content" in item.keys()) and not (certenroll_minio_trust_anchor is defined)
+  with_items: "{{ certenroll_trust_anchors }}"
+  notify: restart minio
+
+- name: Copy Minio certificate authority chain
+  ansible.builtin.copy:
+    content: "{{ certenroll_minio_trust_anchor }}"
+    dest: /home/minio/.minio/certs/CAs/minio-trust-anchor.crt
+    group: root
+    owner: root
+    mode: "0644"
+    validate: openssl x509 -inform PEM -in %s -noout
+  when: (certenroll_minio_trust_anchor is defined)
+  notify: restart minio
+
+- name: Generate CSR for renewal
+  community.crypto.openssl_csr:
+    path: /home/minio/.minio/certs/public.csr
+    privatekey_path: /home/minio/.minio/certs/private.key
+    organization_name: Zynthovian Interstellar Union
+    organizational_unit_name: Digital Infrastructure Services
+    common_name: xenia.zynthovian.xyz
+    subject_alt_name: |
+      DNS:xenia.zynthovian.xyz,DNS:minio.zynthovian.xyz
+
+- name: Fetch CSR for renewal
+  ansible.builtin.fetch:
+    dest: "/tmp/"
+    src: "/home/minio/.minio/certs/public.csr"
+
+- name: Copy Certificate file
+  ansible.builtin.copy:
+    content: "{{ certenroll_minio_certificate }}"
+    dest: /home/minio/.minio/certs/public.crt
+    owner: minio
+    group: minio
+    mode: "0644"
+  notify: restart minio

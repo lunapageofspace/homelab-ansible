@@ -1,0 +1,25 @@
+---
+- name: "[Firewall] Configure host as a firewall"
+  hosts: firewall
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  tasks:
+
+    - name: Add nftables configuration to variable
+      ansible.builtin.set_fact:
+        nftables_rules_raw:
+          "{{ lookup('template', 'nftables/new_main.nft') }}"
+
+    - name: Print ruleset file
+      ansible.builtin.debug:
+        var: nftables_rules_raw
+
+    - name: Validate ruleset
+      ansible.builtin.template:
+        src: nftables/new_main.nft
+        dest: /tmp/nftables_main.nft
+        owner: root
+        group: root
+        mode: u=rw,g=,o=
+        validate: nft -cf %s

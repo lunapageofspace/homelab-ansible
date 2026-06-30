@@ -1,0 +1,3 @@
+# Ansible authentication
+ansible_user: ansible
+ansible_ssh_private_key_file: .private/keys/ansible/ssh-ed25519

@@ -1,0 +1,16 @@
+[connection]
+id=internet
+uuid=e77406c2-9170-4f90-beca-bd24f0524ad9
+type=ethernet
+interface-name=eno3
+
+[ethernet]
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=default
+method=auto
+
+[proxy]

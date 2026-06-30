@@ -10,3 +10,7 @@
   when: ("content" in item.keys())
   with_items: "{{ certenroll_trust_anchors }}"
   notify: Update CA Anchors
+
+- name: Spool in minio module
+  ansible.builtin.import_tasks: module-minio.yaml
+  when: certenroll_minio_certificate is defined

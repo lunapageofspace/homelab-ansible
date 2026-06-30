@@ -1,0 +1,17 @@
+[connection]
+id=eno8.20
+uuid=91306584-b79a-4809-aefc-cb09a1273223
+type=vlan
+interface-name=eno8.20
+master=vm-br-vl20
+slave-type=bridge
+timestamp=1682725378
+
+[ethernet]
+
+[vlan]
+flags=1
+id=20
+parent=eno8
+
+[bridge-port]

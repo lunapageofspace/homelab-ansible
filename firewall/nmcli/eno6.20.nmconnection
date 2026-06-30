@@ -1,0 +1,16 @@
+[connection]
+id=eno6.20
+uuid=e3aca436-535b-479f-969b-2f507549967f
+type=vlan
+interface-name=eno6.20
+master=vm-br-vl20
+slave-type=bridge
+
+[ethernet]
+
+[vlan]
+flags=1
+id=20
+parent=eno6
+
+[bridge-port]

@@ -1,0 +1,36 @@
+# sshd_config_dropins:
+#   - name: 100-banner.conf
+#     content: |
+#       Banner /dev/null
+
+sshd_userca_signers:
+  - filename: ssh_user_ca-zynthovian-xyz.pub
+    content: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEmth45B8vaVPPJ6Ds4Y/t3tdfuiSmd7SkLwRGcORm3I ssh-user-ca@zynthovian.xyz"
+
+__host_name_principals:
+  - "{{ inventory_hostname }}"
+  - "{{ ansible_facts.hostname }}"
+  - "{{ ansible_facts.hostname }}.{{ ansible_facts.domain }}"
+__host_inet_principals: "{{ ansible_facts.all_ipv4_addresses + ansible_facts.all_ipv6_addresses }}"
+# `echo "$(hostname --short),$(hostname --fqdn),$(hostname -i | perl -pe 's/ (?<!$)/,/g')"`
+sshd_hostca_host_principals: "{{ ((__host_name_principals | list) + (__host_inet_principals | list)) | join(',') }}"
+# `echo "$(hostname --short):ssh-host-ca@zynthovian.xyz"`
+sshd_hostca_host_identity: "{{ ansible_facts.hostname }}:ssh-host-ca@zynthovian.xyz"
+
+sshd_hostca_key_file: "/workspace/.private/keys/ssh/host-ca.key"
+sshd_hostca_key_passphrase: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  37623638653932646638666633326564633063623632346234633032383735653836306336323765
+  6131393966313136373666333063366533646633663766350a613038623133613433373465656364
+  31376333323830363363653762303365306637376564626664383436346464373863353238393435
+  3630633737336464360a356139303634383634663635616462616462623334613533336566313961
+  39316362353136313936386231346535633462396133323966316131356237313264
+
+sshd_config_dropins:
+  - name: require-nopasswd-keyauth.conf
+    content: |
+      {% for user in basichost_allow_sudo_nopasswd %}
+      Match User {{ user }}
+        PasswordAuthentication no
+      {% endfor %}
+      Match all

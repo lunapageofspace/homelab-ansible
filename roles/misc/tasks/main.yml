@@ -1,0 +1,6 @@
+---
+- name: Include system tasks
+  ansible.builtin.include_tasks: configure-system.yml
+
+- name: Include users tasks
+  ansible.builtin.include_tasks: configure-users.yml

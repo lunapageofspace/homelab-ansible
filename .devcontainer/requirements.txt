@@ -1,0 +1,8 @@
+openshift==0.13.2
+resolvelib<1.0.2,>=1.0.1
+black>=22.8.0
+jsonschema>=4.10.0
+netaddr==1.1.0
+ansible==9.3.0
+pexpect==4.9.0
+ansible-lint==24.2.1

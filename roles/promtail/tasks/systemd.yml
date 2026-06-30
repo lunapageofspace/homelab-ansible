@@ -1,0 +1,17 @@
+---
+- name: ensure directory structure
+  ansible.builtin.file:
+    path: /usr/local/lib/systemd/system/
+    mode: '0755'
+    state: directory
+  become: true
+
+- name: add systemd service
+  ansible.builtin.copy:
+    content: "{{ lookup('template','templates/promtail.service') }}"
+    dest: /usr/local/lib/systemd/system/promtail.service
+    mode: '0644'
+  become: true
+  notify:
+    - reload_systemd
+    - restart_promtail

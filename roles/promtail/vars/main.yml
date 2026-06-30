@@ -1,0 +1,2 @@
+---
+promtail_version_string_match: 'promtail, version {{ promtail_version }} '

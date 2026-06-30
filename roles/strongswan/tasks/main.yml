@@ -1,0 +1,10 @@
+- name: Install from distro packages
+  package:
+    name: strongswan
+    state: present
+
+- name: Template configuration
+  ansible.builtin.debug:
+    msg: "{{ render }}"
+  vars:
+    render: "{{ lookup('template', 'swanctl.conf.j2') }}"

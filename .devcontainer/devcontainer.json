@@ -1,0 +1,40 @@
+{
+	"name": "Homelab: Ansible",
+	"build": {
+		"dockerfile": "./Dockerfile",
+		"args": {
+			"USERNAME": "${localEnv:USER}",
+			"VARIANT": "edge",
+			"UID": "1000"
+		}
+	},
+	"runArgs": [
+		"--userns=keep-id",
+		"--dns=172.22.0.1"
+	],
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,Z",
+    "workspaceFolder": "/workspace",
+	"containerUser": "${localEnv:USER}",
+	"remoteUser": "${localEnv:USER}",
+	"customizations": {
+		"vscode": {
+			"settings.extensions.verifySignature": false,
+			"extensions": [
+				"aaron-bond.better-comments",
+				"britesnow.vscode-toggle-quotes",
+				"eamodio.gitlens",
+				"mhutchie.git-graph",
+				"mitchdenny.ecdc",
+				"oderwat.indent-rainbow",
+				"omBratteng.nftables",
+				"redhat.ansible",
+				"signageos.signageos-vscode-sops",
+				"usernamehw.errorlens",
+				"mohsen1.prettify-json",
+				"devMike.mikrotik-routeros-script",
+				"samuelcolvin.jinjahtml",
+				"wholroyd.jinja"
+			]
+		}
+	}
+}

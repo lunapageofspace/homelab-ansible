@@ -6,8 +6,9 @@
   any_errors_fatal: true
 
   roles:
-    - role: linux-system-roles.nbde_server
-    - role: geerlingguy.node_exporter
+    - role: promtail
     - role: arillso.logrotate
-    - role: keepalived
-    - role: haproxy
+    # - role: linux-system-roles.nbde_server
+    # - role: geerlingguy.node_exporter
+    # - role: keepalived
+    # - role: haproxy

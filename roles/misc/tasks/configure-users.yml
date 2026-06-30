@@ -1,0 +1,92 @@
+---
+- name: Find shell binary
+  register: __default_shell_binary
+  changed_when: false
+  ansible.builtin.shell:
+    cmd: "which zsh"
+
+- name: Create users
+  ansible.builtin.user:
+    update_password: always
+    name: "{{ item.name }}"
+    shell: "{{ item.shell | default(__default_shell_binary.stdout) }}"
+    comment: "{{ item.comment | default(omit) }}"
+    groups: "{{ item.groups | default(omit) }}"
+    create_home: "{{ item.create_home | default(true) }}"
+    password: "{{ item.password | default(omit) }}"
+    append: true
+  with_items: "{{ misc_create_users }}"
+
+- name: Manage User SSH Authorized keys
+  ansible.posix.authorized_keys:
+    user: "{{ item.0.name }}"
+    state: present
+    key: "{{ item.1 }}"
+  with_subelements:
+    - "{{ misc_create_users }}"
+    - ssh_authorized_publickeys
+
+
+- name: Install dotfiles to user home directory
+  ignore_errors: true
+  block:
+
+    - name: Ensure dotfiles repository is cloned locally.
+      become: true
+      become_user: "{{ item.name }}"
+      with_items: "{{ misc_create_users }}"
+      ansible.builtin.git:
+        repo: "{{ misc_dots_vcs_url }}"
+        dest: "/home/{{ item.name }}/{{ misc_dots_workdir }}"
+        version: "{{ misc_dots_branch }}"
+        accept_hostkey: "{{ misc_dots_accept_hostkey }}"
+
+    - name: Stow misc
+      become: true
+      become_user: "{{ item.name }}"
+      with_items: "{{ misc_create_users }}"
+      stow:
+        package: "{{ misc_dots_stow_package }}"
+        dir: "/home/{{ item.name }}/{{ misc_dots_workdir }}"
+        target: "/home/{{ item.name }}/"
+        state: supress
+
+- name: Create Authorized Keys file
+  block:
+
+    - name: Set up directory
+      become: true
+      become_user: "{{ item.name }}"
+      with_items: "{{ misc_create_users }}"
+      when: item.authorized_keys_raw is defined
+      ansible.builtin.file:
+        state: directory
+        path: /home/{{ item.name }}/.ssh/
+        owner: "{{ item.name }}"
+        group: "{{ item.name }}"
+        mode: "0700"
+
+    - name: Add keys
+      become: true
+      become_user: "{{ item.name }}"
+      with_items: "{{ misc_create_users }}"
+      when: item.authorized_keys_raw is defined
+      ansible.builtin.copy:
+        content: "{{ item.authorized_keys_raw }}"
+        dest: /home/{{ item.name }}/.ssh/authorized_keys
+        owner: "{{ item.name }}"
+        group: "{{ item.name }}"
+        mode: "0600"
+
+# ! This would execute each iteration
+# !  We do not want this
+# - name: Inject misc into /etc/skell
+#   when: misc_dots_inject_skel
+#   block:
+#
+#     - name: Clone dotfiles into /etc/skell
+#       ansible.builtin.git:
+#         repo: "{{ misc_dots_vcs_url }}"
+#         dest: "{{ misc_dots_workdir }}"
+#         version: "{{ misc_dots_branch }}"
+#         accept_hostkey: "{{ misc_dots_accept_hostkey }}"

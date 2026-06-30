@@ -1,0 +1,181 @@
+minio_server_datadirs:
+  - /srv/nfs/media/S3
+
+certenroll_minio_certificate: |
+  Certificate:
+      Data:
+          Version: 3 (0x2)
+          Serial Number:
+              60:92:5e:30:ee:5c:cc:33:9d:19:d1:14:63:7f:3c:93:11:27:3e:52
+          Signature Algorithm: ecdsa-with-SHA384
+          Issuer: O=Zynthovian Interstellar Union, OU=Digital Infrastructure Services, CN=Root Certification Authority
+          Validity
+              Not Before: Mar 24 01:42:49 2026 GMT
+              Not After : Mar 23 01:42:49 2036 GMT
+          Subject: O=Zynthovian Interstellar Union, OU=Digital Infrastructure Services, CN=xenia.zynthovian.xyz
+          Subject Public Key Info:
+              Public Key Algorithm: id-ecPublicKey
+                  Public-Key: (384 bit)
+                  pub:
+                      04:74:85:2a:ec:05:bb:da:a7:82:84:bb:eb:27:6a:
+                      7a:9a:06:eb:a0:80:a7:5f:52:37:43:e5:7a:82:f4:
+                      9a:d8:6a:d5:09:f4:73:df:9c:02:79:ea:2d:ea:cb:
+                      64:49:ff:ef:70:35:a2:1f:c0:0a:4e:44:c0:db:8a:
+                      63:ac:e1:c4:df:39:b7:02:13:1f:83:72:6b:c2:d9:
+                      13:38:a8:f8:04:48:bd:b2:af:82:3a:52:6c:d1:4c:
+                      64:d7:a4:b2:7c:de:fd
+                  ASN1 OID: secp384r1
+                  NIST CURVE: P-384
+          X509v3 extensions:
+              X509v3 Basic Constraints:
+                  CA:FALSE
+              X509v3 Extended Key Usage:
+                  TLS Web Server Authentication, TLS Web Client Authentication
+              X509v3 Key Usage: critical
+                  Digital Signature, Key Encipherment
+              X509v3 Subject Key Identifier:
+                  75:7C:DA:F3:95:FE:4E:39:83:A1:71:E1:BD:1C:5B:A8:1A:3E:55:88
+              X509v3 Authority Key Identifier:
+                  F3:2C:15:11:C1:9B:F9:6C:F7:6A:48:0D:5C:BC:A6:87:D8:2E:E3:BE
+              Authority Information Access:
+                  CA Issuers - URI:http://pki.zynthovian.xyz/root-ca.cer
+              X509v3 CRL Distribution Points:
+                  Full Name:
+                    URI:http://pki.zynthovian.xyz/root-ca.crl
+
+              X509v3 Subject Alternative Name:
+                  DNS:xenia.zynthovian.xyz, DNS:minio.zynthovian.xyz
+
+      Signature Algorithm: ecdsa-with-SHA384
+      Signature Value:
+          30:64:02:30:0f:b6:fb:98:06:28:8a:8d:8a:51:0e:2c:08:65:
+          a4:3c:9b:cc:19:42:0f:d2:fc:de:a8:e2:6b:ed:98:26:65:c7:
+          6d:0f:fb:d7:33:5a:fb:0c:6f:1c:92:a1:8f:27:83:06:02:30:
+          7e:f2:39:60:e4:2b:6a:76:84:a5:39:e6:0d:2f:65:a4:29:73:
+          66:f7:c1:4f:bc:60:54:93:27:ac:89:0e:3f:29:b9:db:be:f6:
+          11:8e:77:e6:4a:31:e6:57:48:0a:fb:29
+  -----BEGIN CERTIFICATE-----
+  MIIDWzCCAuKgAwIBAgIUYJJeMO5czDOdGdEUY388kxEnPlIwCgYIKoZIzj0EAwMw
+  eTEmMCQGA1UECgwdWnludGhvdmlhbiBJbnRlcnN0ZWxsYXIgVW5pb24xKDAmBgNV
+  BAsMH0RpZ2l0YWwgSW5mcmFzdHJ1Y3R1cmUgU2VydmljZXMxJTAjBgNVBAMMHFJv
+  b3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMjYwMzI0MDE0MjQ5WhcNMzYw
+  MzIzMDE0MjQ5WjBxMSYwJAYDVQQKDB1aeW50aG92aWFuIEludGVyc3RlbGxhciBV
+  bmlvbjEoMCYGA1UECwwfRGlnaXRhbCBJbmZyYXN0cnVjdHVyZSBTZXJ2aWNlczEd
+  MBsGA1UEAwwUeGVuaWEuenludGhvdmlhbi54eXowdjAQBgcqhkjOPQIBBgUrgQQA
+  IgNiAAR0hSrsBbvap4KEu+snanqaBuuggKdfUjdD5XqC9JrYatUJ9HPfnAJ56i3q
+  y2RJ/+9wNaIfwApORMDbimOs4cTfObcCEx+DcmvC2RM4qPgESL2yr4I6UmzRTGTX
+  pLJ83v2jggExMIIBLTAJBgNVHRMEAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggr
+  BgEFBQcDAjAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0OBBYEFHV82vOV/k45g6Fx4b0c
+  W6gaPlWIMB8GA1UdIwQYMBaAFPMsFRHBm/ls92pIDVy8pofYLuO+MEEGCCsGAQUF
+  BwEBBDUwMzAxBggrBgEFBQcwAoYlaHR0cDovL3BraS56eW50aG92aWFuLnh5ei9y
+  b290LWNhLmNlcjA2BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vcGtpLnp5bnRob3Zp
+  YW4ueHl6L3Jvb3QtY2EuY3JsMDYGA1UdEQQvMC2CFHhlbmlhLnp5bnRob3ZpYW4u
+  eHl6ghVtaW5pby56eW50aG92aWFuLnh5egowCgYIKoZIzj0EAwMDZwAwZAIwD7b7
+  mAYoio2KUQ4sCGWkPJvMGUIP0vzeqOJr7ZgmZcdtD/vXM1r7DG8ckqGPJ4MGAjB+
+  8jlg5CtqdoSlOeYNL2WkKXNm98FPvGBUkyesiQ4/KbnbvvYRjnfmSjHmV0gK+yk=
+  -----END CERTIFICATE-----
+  Certificate:
+      Data:
+          Version: 3 (0x2)
+          Serial Number:
+              3f:e9:bf:9e:2e:75:fd:99:33:75:6f:18:dc:63:c9:ba:5a:d3:ff:69
+          Signature Algorithm: ecdsa-with-SHA384
+          Issuer: O=Zynthovian Interstellar Union, OU=Digital Infrastructure Services, CN=Root Certification Authority
+          Validity
+              Not Before: Sep 16 00:00:00 2024 GMT
+              Not After : Sep 18 00:00:00 2034 GMT
+          Subject: O=Zynthovian Interstellar Union, OU=Digital Infrastructure Services, CN=Root Certification Authority
+          Subject Public Key Info:
+              Public Key Algorithm: id-ecPublicKey
+                  Public-Key: (384 bit)
+                  pub:
+                      04:d8:b2:ae:85:4e:e0:f8:8c:57:c8:90:06:fd:84:
+                      47:44:1b:fd:17:6c:5f:99:37:3a:60:2d:68:7e:29:
+                      22:1c:8b:71:71:de:f0:c7:73:61:d3:26:9c:a2:4a:
+                      1c:20:47:db:87:17:51:03:d7:d4:79:bc:ba:ad:5a:
+                      7f:1b:77:c9:82:15:27:2c:dc:5d:77:9f:ff:7c:73:
+                      d9:8d:2e:4a:95:d9:ac:1a:09:98:da:9b:b4:2b:43:
+                      f2:90:0b:d8:ea:b9:1b
+                  ASN1 OID: secp384r1
+                  NIST CURVE: P-384
+          X509v3 extensions:
+              X509v3 Key Usage: critical
+                  Certificate Sign, CRL Sign
+              X509v3 Basic Constraints: critical
+                  CA:TRUE
+              X509v3 Subject Key Identifier:
+                  F3:2C:15:11:C1:9B:F9:6C:F7:6A:48:0D:5C:BC:A6:87:D8:2E:E3:BE
+              X509v3 Authority Key Identifier:
+                  F3:2C:15:11:C1:9B:F9:6C:F7:6A:48:0D:5C:BC:A6:87:D8:2E:E3:BE
+              certOwner:
+                  .'Elliana Perry <elliana.perry@gmail.com>
+              certIntendedUsecase:
+                  ..Homelab Certificate Authority
+      Signature Algorithm: ecdsa-with-SHA384
+      Signature Value:
+          30:64:02:30:3b:6a:39:99:22:40:cb:96:95:96:09:b7:98:6a:
+          34:1a:c7:9f:57:ba:ff:7a:92:a5:4b:28:41:c6:b4:19:97:f4:
+          2f:6d:d1:22:5d:5d:38:98:42:01:6b:c1:6b:c8:fb:b6:02:30:
+          07:38:9a:4b:ba:60:75:26:1e:7c:08:bf:56:84:d6:e0:c9:80:
+          43:44:83:ed:09:3c:76:33:b9:5f:9d:4a:7d:11:20:49:a8:ab:
+          c1:6f:36:69:5f:d4:2a:ac:d7:0c:e5:64
+  -----BEGIN CERTIFICATE-----
+  MIIC9zCCAn6gAwIBAgIUP+m/ni51/ZkzdW8Y3GPJulrT/2kwCgYIKoZIzj0EAwMw
+  eTEmMCQGA1UECgwdWnludGhvdmlhbiBJbnRlcnN0ZWxsYXIgVW5pb24xKDAmBgNV
+  BAsMH0RpZ2l0YWwgSW5mcmFzdHJ1Y3R1cmUgU2VydmljZXMxJTAjBgNVBAMMHFJv
+  b3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMjQwOTE2MDAwMDAwWhcNMzQw
+  OTE4MDAwMDAwWjB5MSYwJAYDVQQKDB1aeW50aG92aWFuIEludGVyc3RlbGxhciBV
+  bmlvbjEoMCYGA1UECwwfRGlnaXRhbCBJbmZyYXN0cnVjdHVyZSBTZXJ2aWNlczEl
+  MCMGA1UEAwwcUm9vdCBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTB2MBAGByqGSM49
+  AgEGBSuBBAAiA2IABNiyroVO4PiMV8iQBv2ER0Qb/RdsX5k3OmAtaH4pIhyLcXHe
+  8MdzYdMmnKJKHCBH24cXUQPX1Hm8uq1afxt3yYIVJyzcXXef/3xz2Y0uSpXZrBoJ
+  mNqbtCtD8pAL2Oq5G6OBxjCBwzAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUw
+  AwEB/zAdBgNVHQ4EFgQU8ywVEcGb+Wz3akgNXLymh9gu474wHwYDVR0jBBgwFoAU
+  8ywVEcGb+Wz3akgNXLymh9gu474wNAYHKwYBBAF6AQQpDCdFbGxpYW5hIFBlcnJ5
+  IDxlbGxpYW5hLnBlcnJ5QGdtYWlsLmNvbT4wKgYHKwYBBAF6AgQfDB1Ib21lbGFi
+  IENlcnRpZmljYXRlIEF1dGhvcml0eTAKBggqhkjOPQQDAwNnADBkAjA7ajmZIkDL
+  lpWWCbeYajQax59Xuv96kqVLKEHGtBmX9C9t0SJdXTiYQgFrwWvI+7YCMAc4mku6
+  YHUmHnwIv1aE1uDJgENEg+0JPHYzuV+dSn0RIEmoq8FvNmlf1Cqs1wzlZA==
+  -----END CERTIFICATE-----
+
+
+certenroll_minio_trust_anchor: |
+  -----BEGIN CERTIFICATE-----
+  MIIDeDCCAv2gAwIBAgIUPcsUfpAzEGlRBr8bmUSSb/JFun8wCgYIKoZIzj0EAwMw
+  eTEmMCQGA1UECgwdWnludGhvdmlhbiBJbnRlcnN0ZWxsYXIgVW5pb24xKDAmBgNV
+  BAsMH0RpZ2l0YWwgSW5mcmFzdHJ1Y3R1cmUgU2VydmljZXMxJTAjBgNVBAMMHFJv
+  b3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMjQwOTIwMTQzNzQ5WhcNMzQw
+  OTIwMTQzNzQ5WjB4MSYwJAYDVQQKDB1aeW50aG92aWFuIEludGVyc3RlbGxhciBV
+  bmlvbjEoMCYGA1UECwwfRGlnaXRhbCBJbmZyYXN0cnVjdHVyZSBTZXJ2aWNlczEk
+  MCIGA1UEAwwbVExTIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MHYwEAYHKoZIzj0C
+  AQYFK4EEACIDYgAEFzGA1eKzTkeC2HubdFczrhPTzSIdn+k4g989DBKkGy9T1RjJ
+  kRpp+Cp5JGsF/b+mS0kRsxvCXrn8JjOEvbSXG4FQZ+kViG/hlh1Z0JWR/YztD/We
+  1GRw2NkhWHdHIbyWo4IBRTCCAUEwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQI
+  MAYBAf8CAQAwHQYDVR0OBBYEFC8owDcYVMcQp2HfKMshHDom2kMEMB8GA1UdIwQY
+  MBaAFPMsFRHBm/ls92pIDVy8pofYLuO+MEEGCCsGAQUFBwEBBDUwMzAxBggrBgEF
+  BQcwAoYlaHR0cDovL3BraS56eW50aG92aWFuLnh5ei9yb290LWNhLmNlcjA2BgNV
+  HR8ELzAtMCugKaAnhiVodHRwOi8vcGtpLnp5bnRob3ZpYW4ueHl6L3Jvb3QtY2Eu
+  Y3JsMDQGBysGAQQBegEEKQwnRWxsaWFuYSBQZXJyeSA8ZWxsaWFuYS5wZXJyeUBn
+  bWFpbC5jb20+MCoGBysGAQQBegIEHwwdSG9tZWxhYiBDZXJ0aWZpY2F0ZSBBdXRo
+  b3JpdHkwCgYIKoZIzj0EAwMDaQAwZgIxAMFA96E7hMTjUcPUBAdIa5qorwZIEYW5
+  IeJNuVUOy5GAOsj15WlIH3+w0WthvJY0GQIxAMzbLSJ3q7xitWqPOmn9t6fqjBYY
+  bXNb48PiLpYCfSZADtFvkwC+G5jAC57CdAg76Q==
+  -----END CERTIFICATE-----
+  -----BEGIN CERTIFICATE-----
+  MIIC9zCCAn6gAwIBAgIUP+m/ni51/ZkzdW8Y3GPJulrT/2kwCgYIKoZIzj0EAwMw
+  eTEmMCQGA1UECgwdWnludGhvdmlhbiBJbnRlcnN0ZWxsYXIgVW5pb24xKDAmBgNV
+  BAsMH0RpZ2l0YWwgSW5mcmFzdHJ1Y3R1cmUgU2VydmljZXMxJTAjBgNVBAMMHFJv
+  b3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMjQwOTE2MDAwMDAwWhcNMzQw
+  OTE4MDAwMDAwWjB5MSYwJAYDVQQKDB1aeW50aG92aWFuIEludGVyc3RlbGxhciBV
+  bmlvbjEoMCYGA1UECwwfRGlnaXRhbCBJbmZyYXN0cnVjdHVyZSBTZXJ2aWNlczEl
+  MCMGA1UEAwwcUm9vdCBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTB2MBAGByqGSM49
+  AgEGBSuBBAAiA2IABNiyroVO4PiMV8iQBv2ER0Qb/RdsX5k3OmAtaH4pIhyLcXHe
+  8MdzYdMmnKJKHCBH24cXUQPX1Hm8uq1afxt3yYIVJyzcXXef/3xz2Y0uSpXZrBoJ
+  mNqbtCtD8pAL2Oq5G6OBxjCBwzAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUw
+  AwEB/zAdBgNVHQ4EFgQU8ywVEcGb+Wz3akgNXLymh9gu474wHwYDVR0jBBgwFoAU
+  8ywVEcGb+Wz3akgNXLymh9gu474wNAYHKwYBBAF6AQQpDCdFbGxpYW5hIFBlcnJ5
+  IDxlbGxpYW5hLnBlcnJ5QGdtYWlsLmNvbT4wKgYHKwYBBAF6AgQfDB1Ib21lbGFi
+  IENlcnRpZmljYXRlIEF1dGhvcml0eTAKBggqhkjOPQQDAwNnADBkAjA7ajmZIkDL
+  lpWWCbeYajQax59Xuv96kqVLKEHGtBmX9C9t0SJdXTiYQgFrwWvI+7YCMAc4mku6
+  YHUmHnwIv1aE1uDJgENEg+0JPHYzuV+dSn0RIEmoq8FvNmlf1Cqs1wzlZA==
+  -----END CERTIFICATE-----

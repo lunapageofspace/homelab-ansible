@@ -1,0 +1,4 @@
+minio_root_user: Appendage7625
+minio_root_password: Grandpa4.Consumer.Scowling.Sabbath
+minio_server_env_extra: |
+  MINIO_DOMAIN="minio.xynthovian.xyz"

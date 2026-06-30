@@ -5,6 +5,9 @@
   become: true
   tasks:
 
+    - name: General config and users
+      ansible.builtin.include_role:
+        name: misc
 
     - name: Configures SSHd and deploys certificate trust
       ansible.builtin.include_role:
