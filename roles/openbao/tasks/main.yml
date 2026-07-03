@@ -1,0 +1,55 @@
+---
+- name: Install the openbao repository
+  ansible.builtin.yum_repository:
+    name: openbao
+    enabled: true
+    description: OpenBAO Repository
+    baseurl: https://pkgs.openbao.org/rpm/$basearch
+    gpgkey: https://openbao.org/assets/openbao-gpg-pub-20240618.asc
+    gpgcheck: true
+    repo_gpgcheck: false
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+    sslverify: true
+    metadata_expire: 300
+
+- name: Install openbao
+  ansible.builtin.dnf:
+    name:
+      - openbao
+      - acl
+    state: present
+
+- name: Permit OpenBao to read the server x509 certificate
+  # setfacl -m u:openbao:r /etc/pki/tls/private/{{ inventory_hostname }}.key
+  ansible.posix.acl:
+    path: "{{ item }}"
+    entity: openbao
+    etype: user
+    state: present
+    permissions: r
+  loop:
+    - "{{ certenroll_key.filename }}"
+    - "{{ certenroll_crt.filename }}"
+
+- name: Ensure presence of configured data directory
+  ansible.builtin.file:
+    path: "{{ openbao_storage.path }}"
+    state: directory
+    owner: openbao
+    group: openbao
+    mode: '0700'
+
+- name: Deploy openbao configuration
+  ansible.builtin.template:
+    src: openbao.hcl.j2
+    dest: /etc/openbao/openbao.hcl
+    owner: openbao
+    group: openbao
+    mode: '0640'
+  notify: restart openbao
+
+- name: Enable and start openbao service
+  ansible.builtin.service:
+    name: openbao
+    enabled: true
+    state: started

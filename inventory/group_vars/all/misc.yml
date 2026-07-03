@@ -18,10 +18,9 @@ misc_create_users:
     password: "$y$j9T$Zv5IftPo46crlFgikpXz91$oLOIH1RKp/iZZ9WORmawyQG0JErPD0DhWWfWXXcIva0"
     authorized_keys: |
       ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzODQAAABhBNiyroVO4PiMV8iQBv2ER0Qb/RdsX5k3OmAtaH4pIhyLcXHe8MdzYdMmnKJKHCBH24cXUQPX1Hm8uq1afxt3yYIVJyzcXXef/3xz2Y0uSpXZrBoJmNqbtCtD8pAL2Oq5Gw== cardno:22_730_621
-    #  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII7DAHfg26u7UylYiF6PiM9hdbe4ejAfmjgq/Lpa0Nb+ cardno:22_730_621
+      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII7DAHfg26u7UylYiF6PiM9hdbe4ejAfmjgq/Lpa0Nb+ cardno:22_730_621
 
 dotfiles_inject_skel: true
-
 
 certenroll:
   organization_name: Zynthovian Interstellar Union

@@ -1,15 +1,18 @@
 ---
-- name: MinIO Installation
-  hosts: storage
+- name: NAS Provisioning
+  hosts: "{{ target_hosts | default('storage') }}"
   become: true
   gather_facts: true
   any_errors_fatal: true
   tasks:
 
-    - name: Install MinIO Server
-      ansible.builtin.include_role:
-        name: minio
-
     - name: Configure Certificates
       ansible.builtin.include_role:
         name: certenroll
+
+    - name: Install OpenBao
+      ansible.builtin.include_role:
+        name: openbao
+
+# TODO
+# - Set up ssh disk unlocking?

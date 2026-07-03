@@ -1,0 +1,4 @@
+---
+openbao_storage:
+  type: file
+  path: /var/lib/openbao

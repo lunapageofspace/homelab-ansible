@@ -27,15 +27,16 @@ sshd_hostca_key_passphrase: !vault |
   39316362353136313936386231346535633462396133323966316131356237313264
 
 sshd_config_dropins:
-  - name: 100-disable-password-auth.conf
-    content: |
-      # Disable password authentication for users who are permitted to SUDO without password
-
-      {% for user in misc_allow_sudo_nopasswd %}
-      Match User {{ user }}
-        PasswordAuthentication no
-      {% endfor %}
-      Match all
+  # TODO: This causes pain in testing
+  #- name: 100-disable-password-auth.conf
+  #  content: |
+  #    # Disable password authentication for users who are permitted to SUDO without password
+  #
+  #    {% for user in misc_allow_sudo_nopasswd %}
+  #    Match User {{ user }}
+  #      PasswordAuthentication no
+  #    {% endfor %}
+  #    Match all
   - name: 101-authorized-keys-directory.conf
     content: |
       # Configure deamon to check authorized keys directory

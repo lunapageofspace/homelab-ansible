@@ -1,0 +1,33 @@
+# Full configuration options can be found at https://openbao.org/docs/configuration
+
+ui = true
+
+#mlock = true
+#disable_mlock = true
+
+
+cluster_addr  = "https://127.0.0.1:8202"
+api_addr      = "https://127.0.0.1:8201"
+
+storage "raft" {
+  path = "{{ openbao_storage.path }}"
+  node_id = "{{ openbao_storage.node_id | default(inventory_hostname) }}"
+}
+
+audit "syslog" "auth_events" {
+  options {
+    facility = "AUTH"
+    tag = "openbao-auth"
+  }
+}
+
+listener "tcp" {
+  address       = "0.0.0.0:8200"
+  tls_cert_file = "{{ certenroll_crt.filename }}"
+  tls_key_file  = "{{ certenroll_key.filename }}"
+}
+
+seal "static" {
+  current_key_id = "initial-key"
+  current_key = "{{ openbao_seal_key }}"
+}
