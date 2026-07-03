@@ -1,6 +1,12 @@
 ---
-- name: Include system tasks
-  ansible.builtin.include_tasks: configure-system.yml
+- name: Ensure desired packages are installed
+  ansible.builtin.include_tasks: packages.yml
 
-- name: Include users tasks
-  ansible.builtin.include_tasks: configure-users.yml
+- name: Configure user accounts and authentication
+  ansible.builtin.include_tasks: auth.yml
+
+- name: Configure system settings
+  ansible.builtin.include_tasks: config.system.yml
+
+- name: Configure user dotfiles and shell environment
+  ansible.builtin.include_tasks: config.users.yml

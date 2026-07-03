@@ -1,0 +1,16 @@
+---
+- name: Clone dotfiles repository to /etc/skel
+  ansible.builtin.git:
+    repo: "{{ misc_dots_vcs_url }}"
+    dest: "/etc/skel/{{ misc_dots_workdir }}"
+    version: "{{ misc_dots_branch }}"
+    accept_hostkey: "{{ misc_dots_accept_hostkey }}"
+    single_branch: true
+
+- name: Stow repository into user profiles
+  with_items: "{{ misc_create_users }}"
+  stow:
+    package: "{{ misc_dots_stow_package }}"
+    dir: "/etc/skel/{{ misc_dots_workdir }}"
+    target: "/home/{{ item.name }}/"
+    state: supress

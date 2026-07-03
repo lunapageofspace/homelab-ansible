@@ -1,0 +1,51 @@
+- name: Enable EPEL repository
+  ansible.builtin.dnf:
+    name: epel-release
+    state: present
+    update_cache: true
+
+- name: Install requested packages
+  ansible.builtin.dnf:
+    name: "{{ misc_system_packages }}"
+    state: present
+    update_cache: true
+
+- name: Download and install binaries from sources
+  with_items: "{{ misc_binaries }}"
+  ansible.builtin.unarchive:
+    src: "{{ item.src_url }}"
+    dest: "{{ misc_bin_pfx }}"
+    creates: "{{ misc_bin_pfx }}/{{ item.name }}"
+    include: "{{ item.include | default(omit) }}"
+    extra_opts: "{{ item.extra_opts | default(omit) }}"
+    remote_src: true
+    mode: "u+rx,g+rx,o+rx"
+    owner: root
+    group: root
+
+- name: Manage authorized keys for users
+  block:
+
+    - name: Create ssh config directory
+      become: true
+      become_user: "{{ item.name }}"
+      with_items: "{{ misc_create_users }}"
+      when: item.authorized_keys_raw is defined
+      ansible.builtin.file:
+        state: directory
+        path: /home/{{ item.name }}/.ssh/
+        owner: "{{ item.name }}"
+        group: "{{ item.name }}"
+        mode: "0700"
+
+    - name: Add keys
+      become: true
+      become_user: "{{ item.name }}"
+      with_items: "{{ misc_create_users }}"
+      when: item.authorized_keys_raw is defined
+      ansible.builtin.copy:
+        content: "{{ item.authorized_keys_raw }}"
+        dest: /home/{{ item.name }}/.ssh/authorized_keys
+        owner: "{{ item.name }}"
+        group: "{{ item.name }}"
+        mode: "0600"

@@ -1,0 +1,61 @@
+---
+- name: Find zsh binary path
+  ansible.builtin.command:
+    cmd: command -v zsh
+  register: misc_zsh_binary_path
+  changed_when: false
+  failed_when: false
+
+- name: Create users
+  ansible.builtin.user:
+    update_password: always
+    name: "{{ item.name }}"
+    shell: "{{ item.shell | default(misc_zsh_binary_path.stdout) }}"
+    comment: "{{ item.comment | default(omit) }}"
+    groups: "{{ item.groups | default(omit) }}"
+    create_home: "{{ item.create_home | default(true) }}"
+    password: "{{ item.password | default(omit) }}"
+    append: true
+  with_items: "{{ misc_create_users }}"
+
+- name: Ensure presence of ~/.ssh/authorized_keys.d/ for each user
+  become: true
+  with_items: "{{ misc_create_users }}"
+  loop: "{{ misc_create_users }}"
+  when: item.authorized_keys is defined
+  ansible.builtin.file:
+    state: directory
+    path: /home/{{ item.name }}/.ssh/authorized_keys.d/
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: "0700"
+
+# - name: with_subelements -> loop
+#   ansible.builtin.debug:
+#     msg: "{{ item.0.name }} - {{ item.1 }}"
+#   loop: "{{ misc_create_users | subelements('authorized_keys', skip_missing=True) }}"
+
+# - name: debug fail
+#   ansible.builtin.fail:
+
+- name: Add authorized ssh keys
+  become: true
+  with_items: "{{ misc_create_users }}"
+  when: item.authorized_keys is defined
+  ansible.builtin.copy:
+    content: "{{ item.authorized_keys }}"
+    dest: /home/{{ item.name }}/.ssh/authorized_keys
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: "0600"
+
+- name: Allow designated users to sudo without password
+  ansible.builtin.copy:
+    content: |
+      #{{ item }}    ALL=(ALL)   NOPASSWD: ALL
+      {{ item }} ALL=(ALL:ALL) NOPASSWD:SETENV: ALL
+    dest: "/etc/sudoers.d/{{ item }}-nopasswd"
+    owner: root
+    group: root
+    mode: "0440"
+  with_items: "{{ misc_allow_sudo_nopasswd }}"
