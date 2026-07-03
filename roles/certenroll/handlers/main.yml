@@ -1,4 +1,11 @@
 ---
-- name: Update CA Anchors
-  become: true
+- name: Update x509 trust anchors
   ansible.builtin.command: "update-ca-trust"
+  become: true
+  changed_when: false
+  listen:
+    - x509 trust anchor added
+
+- name: Update x509 trust anchors
+  ansible.builtin.debug:
+  listen: server certificate renewed

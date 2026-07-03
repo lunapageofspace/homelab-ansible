@@ -17,7 +17,7 @@ sshd_hostca_host_principals: "{{ ((__host_name_principals | list) + (__host_inet
 # `echo "$(hostname --short):ssh-host-ca@zynthovian.xyz"`
 sshd_hostca_host_identity: "{{ ansible_facts.hostname }}:ssh-host-ca@zynthovian.xyz"
 
-sshd_hostca_key_file: "/workspace/.private/keys/ssh/host-ca.key"
+sshd_hostca_key_file: "{{ playbook_dir }}/../.private/keys/ssh/host-ca.key"
 sshd_hostca_key_passphrase: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   37623638653932646638666633326564633063623632346234633032383735653836306336323765
@@ -27,10 +27,16 @@ sshd_hostca_key_passphrase: !vault |
   39316362353136313936386231346535633462396133323966316131356237313264
 
 sshd_config_dropins:
-  - name: require-nopasswd-keyauth.conf
+  - name: 100-disable-password-auth.conf
     content: |
-      {% for user in basichost_allow_sudo_nopasswd %}
+      # Disable password authentication for users who are permitted to SUDO without password
+
+      {% for user in misc_allow_sudo_nopasswd %}
       Match User {{ user }}
         PasswordAuthentication no
       {% endfor %}
       Match all
+  - name: 101-authorized-keys-directory.conf
+    content: |
+      # Configure deamon to check authorized keys directory
+      AuthorizedKeysFile .ssh/authorized_keys .ssh/authorized_keys.d/

@@ -1,30 +1,9 @@
 ---
-kubernetes:
-  hosts:
-    amd64-server-b5915c.int.zynthovian.xyz:
-      # StackPos: 0
-      ansible_host: 172.22.0.10
-    amd64-server-7f97c6.int.zynthovian.xyz:
-      # StackPos: 1
-      ansible_host: 172.22.0.11
-    amd64-server-a2e7bb.int.zynthovian.xyz:
-      # StackPos: 2
-      ansible_host: 172.22.0.12
 firewall:
-  children:
-    testing:
-      hosts:
-        tst-rcky-fw-00:
-        tst-rcky-fw-01:
-    production:
-      hosts:
-        nftfw-5019d.man.zynthovian.xyz:
-          # ansible_host: 172.22.0.120
-          ansible_host: 172.22.1.120
-
-      # rpi-fw-edge:
-      #   ansible_host: 172.22.0.1
+  hosts:
+    hecate.zynthovian.xyz:
+      ansible_host: 172.22.0.120
 storage:
   hosts:
-    xenia.int.zynthovian.xyz:
-      ansible_host: 172.22.0.20
+    xenia.zynthovian.xyz:
+      ansible_host: 172.22.0.21

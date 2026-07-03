@@ -1,6 +1,6 @@
 ---
 - name: "Host Adoption playbook"
-  hosts: "{{ target_hosts }}"
+  hosts: "{{ target_hosts | default('none') }}"
   gather_facts: true
   become: true
   tasks:

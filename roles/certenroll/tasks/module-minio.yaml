@@ -21,7 +21,7 @@
     mode: "0644"
     validate: openssl x509 -inform PEM -in %s -noout
   when: ("content" in item.keys()) and not (certenroll_minio_trust_anchor is defined)
-  with_items: "{{ certenroll_trust_anchors }}"
+  with_items: "{{ certenroll.trust_anchors }}"
   notify: restart minio
 
 - name: Copy Minio certificate authority chain

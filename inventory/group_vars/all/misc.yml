@@ -3,52 +3,47 @@
 
 misc_allow_sudo_nopasswd:
   - ansible
+  - elliana
 
 misc_create_users:
   - name: ansible
     comment: "Ansible Automation"
     groups: ["wheel"]
     password: "$y$j9T$4QCOHHa35TfIP/oyNsfhS1$beV9EQI854U3.bqa718O2jDj2G2TLTO4SVrn5Oz3pL5"
+    authorized_keys: |
+      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOkCJxXefrBTfQdc8vr1X95ZNEhP1BlRbVGXgVfjDcbv Ansible@*
   - name: elliana
     comment: "Elliana Perry"
     groups: ["wheel"]
     password: "$y$j9T$Zv5IftPo46crlFgikpXz91$oLOIH1RKp/iZZ9WORmawyQG0JErPD0DhWWfWXXcIva0"
+    authorized_keys: |
+      ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzODQAAABhBNiyroVO4PiMV8iQBv2ER0Qb/RdsX5k3OmAtaH4pIhyLcXHe8MdzYdMmnKJKHCBH24cXUQPX1Hm8uq1afxt3yYIVJyzcXXef/3xz2Y0uSpXZrBoJmNqbtCtD8pAL2Oq5Gw== cardno:22_730_621
+    #  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII7DAHfg26u7UylYiF6PiM9hdbe4ejAfmjgq/Lpa0Nb+ cardno:22_730_621
 
 dotfiles_inject_skel: true
 
-certenroll_trust_anchors:
-  - name: elliana-perry-ca
-    content: |
-      -----BEGIN CERTIFICATE-----
-      MIIB4DCCAWYCFFY6UiHBqKEcpxxxo4e/+86dtwxWMAoGCCqGSM49BAMCMFQxCzAJ
-      BgNVBAYTAlVTMQ0wCwYDVQQIDARPaGlvMQ8wDQYDVQQHDAZNYXVtZWUxJTAjBgNV
-      BAMMHEVsbGlhbmEgUGVycnkgQ2VydCBBdXRob3JpdHkwHhcNMjMxMTIyMjIwNzUz
-      WhcNNDMxMTI0MjIwNzUzWjBUMQswCQYDVQQGEwJVUzENMAsGA1UECAwET2hpbzEP
-      MA0GA1UEBwwGTWF1bWVlMSUwIwYDVQQDDBxFbGxpYW5hIFBlcnJ5IENlcnQgQXV0
-      aG9yaXR5MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAELHgnHqKNZs6J7isa26l6BtUE
-      Ov9GCb0VKZel+NttlHRAHXj9RdaVZAu1WROun5PBtyq8hik402PG7BGWqTJcvCsp
-      zzB2sW2mmUfvg/X2b3gKof9huigSA5x14VzNf4LSMAoGCCqGSM49BAMCA2gAMGUC
-      MDh2NRy+vdps1JwsowN5odNautrNCHzlSOWJVFjXHl7bQJgPtCa7zThwNzYLakfx
-      lAIxANW89E7najBVzQ3GRwHvJYHE5QlYIgtVv6kFjEZErnPikShQt5HUm3B19puQ
-      XKNuXw==
-      -----END CERTIFICATE-----
-  - name: ziu-homelab-root
-    content: |
-      -----BEGIN CERTIFICATE-----
-      MIIC9zCCAn6gAwIBAgIUP+m/ni51/ZkzdW8Y3GPJulrT/2kwCgYIKoZIzj0EAwMw
-      eTEmMCQGA1UECgwdWnludGhvdmlhbiBJbnRlcnN0ZWxsYXIgVW5pb24xKDAmBgNV
-      BAsMH0RpZ2l0YWwgSW5mcmFzdHJ1Y3R1cmUgU2VydmljZXMxJTAjBgNVBAMMHFJv
-      b3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMjQwOTE2MDAwMDAwWhcNMzQw
-      OTE4MDAwMDAwWjB5MSYwJAYDVQQKDB1aeW50aG92aWFuIEludGVyc3RlbGxhciBV
-      bmlvbjEoMCYGA1UECwwfRGlnaXRhbCBJbmZyYXN0cnVjdHVyZSBTZXJ2aWNlczEl
-      MCMGA1UEAwwcUm9vdCBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTB2MBAGByqGSM49
-      AgEGBSuBBAAiA2IABNiyroVO4PiMV8iQBv2ER0Qb/RdsX5k3OmAtaH4pIhyLcXHe
-      8MdzYdMmnKJKHCBH24cXUQPX1Hm8uq1afxt3yYIVJyzcXXef/3xz2Y0uSpXZrBoJ
-      mNqbtCtD8pAL2Oq5G6OBxjCBwzAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUw
-      AwEB/zAdBgNVHQ4EFgQU8ywVEcGb+Wz3akgNXLymh9gu474wHwYDVR0jBBgwFoAU
-      8ywVEcGb+Wz3akgNXLymh9gu474wNAYHKwYBBAF6AQQpDCdFbGxpYW5hIFBlcnJ5
-      IDxlbGxpYW5hLnBlcnJ5QGdtYWlsLmNvbT4wKgYHKwYBBAF6AgQfDB1Ib21lbGFi
-      IENlcnRpZmljYXRlIEF1dGhvcml0eTAKBggqhkjOPQQDAwNnADBkAjA7ajmZIkDL
-      lpWWCbeYajQax59Xuv96kqVLKEHGtBmX9C9t0SJdXTiYQgFrwWvI+7YCMAc4mku6
-      YHUmHnwIv1aE1uDJgENEg+0JPHYzuV+dSn0RIEmoq8FvNmlf1Cqs1wzlZA==
-      -----END CERTIFICATE-----
+
+certenroll:
+  organization_name: Zynthovian Interstellar Union
+  organizational_unit_name: Digital Infrastructure Services
+  trust_anchors:
+    - name: ziu-homelab-root
+      content: |
+        -----BEGIN CERTIFICATE-----
+        MIIC9zCCAn6gAwIBAgIUP+m/ni51/ZkzdW8Y3GPJulrT/2kwCgYIKoZIzj0EAwMw
+        eTEmMCQGA1UECgwdWnludGhvdmlhbiBJbnRlcnN0ZWxsYXIgVW5pb24xKDAmBgNV
+        BAsMH0RpZ2l0YWwgSW5mcmFzdHJ1Y3R1cmUgU2VydmljZXMxJTAjBgNVBAMMHFJv
+        b3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMjQwOTE2MDAwMDAwWhcNMzQw
+        OTE4MDAwMDAwWjB5MSYwJAYDVQQKDB1aeW50aG92aWFuIEludGVyc3RlbGxhciBV
+        bmlvbjEoMCYGA1UECwwfRGlnaXRhbCBJbmZyYXN0cnVjdHVyZSBTZXJ2aWNlczEl
+        MCMGA1UEAwwcUm9vdCBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTB2MBAGByqGSM49
+        AgEGBSuBBAAiA2IABNiyroVO4PiMV8iQBv2ER0Qb/RdsX5k3OmAtaH4pIhyLcXHe
+        8MdzYdMmnKJKHCBH24cXUQPX1Hm8uq1afxt3yYIVJyzcXXef/3xz2Y0uSpXZrBoJ
+        mNqbtCtD8pAL2Oq5G6OBxjCBwzAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUw
+        AwEB/zAdBgNVHQ4EFgQU8ywVEcGb+Wz3akgNXLymh9gu474wHwYDVR0jBBgwFoAU
+        8ywVEcGb+Wz3akgNXLymh9gu474wNAYHKwYBBAF6AQQpDCdFbGxpYW5hIFBlcnJ5
+        IDxlbGxpYW5hLnBlcnJ5QGdtYWlsLmNvbT4wKgYHKwYBBAF6AgQfDB1Ib21lbGFi
+        IENlcnRpZmljYXRlIEF1dGhvcml0eTAKBggqhkjOPQQDAwNnADBkAjA7ajmZIkDL
+        lpWWCbeYajQax59Xuv96kqVLKEHGtBmX9C9t0SJdXTiYQgFrwWvI+7YCMAc4mku6
+        YHUmHnwIv1aE1uDJgENEg+0JPHYzuV+dSn0RIEmoq8FvNmlf1Cqs1wzlZA==
+        -----END CERTIFICATE-----

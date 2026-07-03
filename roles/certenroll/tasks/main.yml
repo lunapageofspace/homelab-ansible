@@ -1,16 +1,82 @@
 ---
-- name: Copy certificate authority
+- name: Ensure presence of python cryptograpy module
+  ansible.builtin.dnf:
+    name: python3-cryptography
+
+- name: Copy certificate authorities
   ansible.builtin.copy:
     content: "{{ item.content }}"
-    dest: /etc/pki/ca-trust/source/anchors/{{ item.name }}.crt
+    dest: "/etc/pki/ca-trust/source/anchors/{{ item.name }}.crt"
     group: root
-    mode: "0644"
+    mode: '0644'
     owner: root
     validate: openssl x509 -inform PEM -in %s -noout
-  when: ("content" in item.keys())
-  with_items: "{{ certenroll_trust_anchors }}"
-  notify: Update CA Anchors
+  loop: "{{ certenroll.trust_anchors }}"
+  when:
+    - item.content is defined
+    - item.content | length > 0
+  notify: x509 trust anchor added
 
-- name: Spool in minio module
-  ansible.builtin.import_tasks: module-minio.yaml
-  when: certenroll_minio_certificate is defined
+- name: Generate private key
+  block:
+    - name: Generate private key
+      community.crypto.openssl_privatekey:
+        path: /etc/pki/tls/private/{{ inventory_hostname }}.key.pem
+        type: ECC
+        curve: secp384r1
+        backup: true
+        owner: root
+        group: root
+        mode: "0600"
+        force: "{{ certenroll_force_keygen | default(false) }}"
+      register: certenroll_key
+
+    - name: Report private key
+      ansible.builtin.debug:
+        msg: |
+          Private key: {{ certenroll_key.filename }}
+          Fingerprint: {{ certenroll_key.fingerprint }}
+
+- name: Check server certificate
+  ansible.builtin.stat:
+    path: /etc/pki/tls/certs/{{ inventory_hostname }}.crt.pem
+  register: certenroll_crt_stat
+
+- name: Renew Server Certificate
+  block:
+    - name: Generate CSR for renewal
+      community.crypto.openssl_csr:
+        path: /etc/pki/tls/certs/{{ inventory_hostname }}.csr.pem
+        privatekey_path: /etc/pki/tls/private/{{ inventory_hostname }}.key.pem
+        organization_name: "{{ certenroll.organization_name }}"
+        organizational_unit_name: "{{ certenroll.organizational_unit_name }}"
+        common_name: "{{ inventory_hostname }}"
+        subject_alt_name: |
+          DNS:{{ inventory_hostname }}
+      register: certenroll_csr
+
+    - name: "Read a file content"
+      ansible.builtin.shell: |
+        cat {{ certenroll_csr.filename }}
+      changed_when: false
+      register: certenroll_server_csr_content
+
+    - name: Present CSR for signing
+      ansible.builtin.debug:
+        msg: "{{ certenroll_server_csr_content.stdout }}"
+
+    - name: Ingest signed certificate
+      ansible.builtin.copy:
+        content: "{{ certenroll.cert | default('PLACEHOLDER') }}"
+        dest: /etc/pki/tls/certs/{{ inventory_hostname }}.crt.pem
+        owner: root
+        group: root
+        mode: "0644"
+      register: certenroll_crt_copy
+      notify: server certificate renewed
+
+    - name: Set fact for signed certificate
+      # I Just like consistency
+      ansible.builtin.set_fact:
+        certenroll_crt:
+          filename: "{{ certenroll_crt_copy.dest }}"
