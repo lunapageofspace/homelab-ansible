@@ -2,7 +2,7 @@
 misc_system_timezone: 'Etc/UTC'
 misc_system_packages:
   - neovim
-  - ranger
+  # - ranger
   - stow
   - curl
   - wget
