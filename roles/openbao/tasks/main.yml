@@ -53,3 +53,10 @@
     name: openbao
     enabled: true
     state: started
+
+- name: Open the Bao port
+  ansible.posix.firewalld:
+    immediate: true
+    permanent: true
+    port: 8200/tcp
+    state: enabled

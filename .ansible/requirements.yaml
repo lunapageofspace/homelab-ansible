@@ -14,5 +14,6 @@ roles:
   - name: linux-system-roles.nbde_client
   - name: linux-system-roles.nbde_server
   - name: geerlingguy.node_exporter
+  - name: geerlingguy.nfs
   - name: arillso.logrotate
   - name: mrlesmithjr.frr

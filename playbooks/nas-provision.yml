@@ -1,5 +1,5 @@
 ---
-- name: NAS Provisioning
+- name: NAS + KMS Provisioning
   hosts: "{{ target_hosts | default('storage') }}"
   become: true
   gather_facts: true
@@ -13,6 +13,17 @@
     - name: Install OpenBao
       ansible.builtin.include_role:
         name: openbao
+
+    - name: Install NFSd
+      ansible.builtin.include_role:
+        name: geerlingguy.nfs
+
+    - name: Open firewall port for NFSd
+      ansible.posix.firewalld:
+        immediate: true
+        permanent: true
+        state: enabled
+        service: nfs
 
 # TODO
 # - Set up ssh disk unlocking?

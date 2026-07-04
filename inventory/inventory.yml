@@ -6,4 +6,4 @@ firewall:
 storage:
   hosts:
     xenia.zynthovian.xyz:
-      ansible_host: 172.22.0.21
+      ansible_host: 172.22.0.20

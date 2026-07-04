@@ -54,3 +54,11 @@ certenroll:
         lpWWCbeYajQax59Xuv96kqVLKEHGtBmX9C9t0SJdXTiYQgFrwWvI+7YCMAc4mku6
         YHUmHnwIv1aE1uDJgENEg+0JPHYzuV+dSn0RIEmoq8FvNmlf1Cqs1wzlZA==
         -----END CERTIFICATE-----
+
+nfs_exports:
+  - /srv/media 172.22.1.5(sec=sys,rw,insecure,no_subtree_check,all_squash,anonuid=1000,anongid=1000)
+  - /srv/media 172.22.0.10(sec=sys,rw,no_subtree_check,all_squash,anonuid=568,anongid=100)
+  - /srv/media 172.22.0.11(sec=sys,rw,no_subtree_check,all_squash,anonuid=568,anongid=100)
+  - /srv/media 172.22.0.12(sec=sys,rw,no_subtree_check,all_squash,anonuid=568,anongid=100)
+
+rustfs_volumes: /srv/media/Archive/rustfs
