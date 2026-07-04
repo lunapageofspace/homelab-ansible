@@ -1,0 +1,95 @@
+---
+- name: Create group for rustfs
+  ansible.builtin.group:
+    system: true
+    name: rustfs
+
+- name: Create user for rustfs
+  ansible.builtin.user:
+    system: true
+    name: rustfs
+    group: rustfs
+
+- name: Install unzip
+  ansible.builtin.dnf:
+    name: unzip
+    state: present
+
+- name: Download and install binaries from sources
+  ansible.builtin.unarchive:
+    src: "{{ bin_url }}"
+    dest: "{{ bin_pfx }}"
+    creates: "{{ bin_pfx }}/rustfs"
+    remote_src: true
+    mode: "u+rx,g+rx,o+rx"
+    owner: root
+    group: root
+  vars:
+    bin_url: "https://dl.rustfs.com/artifacts/rustfs/release/rustfs-linux-x86_64-musl-latest.zip"
+    bin_pfx: "/usr/local/bin/"
+
+- name: Ensure needed directories are present
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: rustfs
+    group: rustfs
+    mode: '0750'
+  loop:
+    - /var/lib/rustfs
+    - /var/log/rustfs
+    - "{{ rustfs_volumes }}"
+
+- name: Link x509 files into /var/lib/rustfs
+  # !  >:( DONT DO THIS, Devs, please allow admins to define the path to cert
+  ansible.builtin.file:
+    src: "{{ item.source }}"
+    dest: "/var/lib/rustfs/{{ item.name }}"
+    state: link
+  loop:
+    - { name: "rustfs_cert.pem", source: "{{ certenroll_crt.filename }}" }
+    - { name: "rustfs_key.pem", source: "{{ certenroll_key.filename }}" }
+
+- name: Permit rustfs to read the server x509 certificate
+  # setfacl -m u:openbao:r /etc/pki/tls/private/{{ inventory_hostname }}.key
+  ansible.posix.acl:
+    path: "{{ item }}"
+    entity: rustfs
+    etype: user
+    state: present
+    permissions: r
+  loop:
+    - "{{ certenroll_key.filename }}"
+    - "{{ certenroll_crt.filename }}"
+
+- name: Deploy rustfs configuration
+  # ! WHY IS THIS APP CONFIGURED ONLY WITH ENVIRONMENT VARS
+  ansible.builtin.copy:
+    content: "{{ lookup('template', 'environment.j2') }}"
+    dest: /etc/default/rustfs
+    owner: rustfs
+    group: rustfs
+    mode: '0640'
+  notify: restart rustfs
+
+- name: Deploy rustfs systemd service
+  ansible.builtin.copy:
+    content: "{{ lookup('template', 'service.j2') }}"
+    dest: /etc/systemd/system/rustfs.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable and start the Minio service
+  ansible.builtin.service:
+    name: rustfs
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: Open port for rustfs
+  ansible.posix.firewalld:
+    immediate: true
+    permanent: true
+    port: 9000-9001/tcp
+    state: enabled

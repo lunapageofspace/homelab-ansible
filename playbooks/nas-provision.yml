@@ -14,16 +14,23 @@
       ansible.builtin.include_role:
         name: openbao
 
-    - name: Install NFSd
-      ansible.builtin.include_role:
-        name: geerlingguy.nfs
+    - name: Install and configure NFS
+      block:
+        - name: Install NFSd
+          ansible.builtin.include_role:
+            name: geerlingguy.nfs
 
-    - name: Open firewall port for NFSd
-      ansible.posix.firewalld:
-        immediate: true
-        permanent: true
-        state: enabled
-        service: nfs
+        - name: Open firewall port for NFSd
+          ansible.posix.firewalld:
+            immediate: true
+            permanent: true
+            state: enabled
+            service: nfs
+
+    - name: Install RustFS
+      ansible.builtin.include_role:
+        name: rustfs
+
 
 # TODO
 # - Set up ssh disk unlocking?
