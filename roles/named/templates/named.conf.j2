@@ -1,0 +1,33 @@
+//
+// named.conf
+//
+// Provided by Red Hat bind package to configure the ISC BIND named(8) DNS
+//
+options {
+    pid-file               "/run/named/named.pid";
+    session-keyfile        "/run/named/session.key";
+    directory              "/var/named";
+    dump-file              "/var/named/data/cache_dump.db";
+    statistics-file        "/var/named/data/named_stats.txt";
+    memstatistics-file     "/var/named/data/named_mem_stats.txt";
+    secroots-file          "/var/named/data/named.secroots";
+    recursing-file         "/var/named/data/named.recursing";
+    managed-keys-directory "/var/named/dynamic";
+    geoip-directory        "/usr/share/GeoIP";
+
+    /* https://fedoraproject.org/wiki/Changes/CryptoPolicy */
+    include "/etc/crypto-policies/back-ends/bind.config";
+
+{% if named_additional_options is defined %}
+{%   for option in named_additional_options %}
+    {{ option }}
+{%   endfor %}
+
+{% endif %}
+};
+
+{% for include in (named_includes | default([])) %}
+include "/etc/named/{{include.name}}";
+{% endfor %}
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";

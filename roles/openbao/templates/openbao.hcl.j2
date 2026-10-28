@@ -22,8 +22,8 @@ audit "syslog" "auth_events" {
 
 listener "tcp" {
   address       = "0.0.0.0:8200"
-  tls_cert_file = "{{ certenroll_crt.filename }}"
-  tls_key_file  = "{{ certenroll_key.filename }}"
+  tls_cert_file = "{{ certenroll_public_key_path }}"
+  tls_key_file  = "{{ certenroll_private_key_path }}"
 }
 
 seal "static" {

@@ -1,0 +1,8 @@
+talos_kms_release_tag: v0.2.0
+
+talos_kms_service_account_username: talos
+talos_kms_service_account_group: talos
+
+talos_kms_key_path: /var/lib/talos/kms.key
+talos_kms_tls_enable: "true"
+talos_kms_api_port: 4050

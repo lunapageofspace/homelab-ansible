@@ -1,16 +1,11 @@
 ---
-nftables_nic_wan: eno3
-nftables_nic_lan: vm-br-vl20
-nftables_nic_man: vm-br-vl10
-nftables_nic_vpn: wg0
-
 nftables_rulesets:
   zones:
     - name: lan
       member_interfaces:
-        - wg0        # vpn
-        - vm-br-vl20 # lan
-        - vm-br-vl10 # management
+        - wg0    # vpn
+        - vlan10 # lan
+        - vlan14 # management
       input_policy: return
       input_rules:
         - comment: ICMP
@@ -20,7 +15,7 @@ nftables_rulesets:
           matches: ["ip6 nexthdr icmpv6"]
           verdict: accept
         - comment: Wireguard
-          matches: [ "udp dport 51820" ]
+          matches: ["udp dport 51820"]
           verdict: accept
         - comment: Domain Name Service
           matches:
@@ -57,15 +52,18 @@ nftables_rulesets:
       forward_policy: accept
       prerouting_rules:
         - comment: Force internal nameserver usage
-          matches: ["meta l4proto { tcp, udp } th dport 53"]
-          verdict: dnat ip to 172.22.0.1
+          matches: ["meta iifname vlan10 meta l4proto { tcp, udp } th dport 53"]
+          verdict: dnat ip to 172.22.0.254
+        - # comment: Force internal nameserver usage
+          matches: ["meta iifname vlan14 meta l4proto { tcp, udp } th dport 53"]
+          verdict: dnat ip to 172.22.4.254
       postrouting_rules:
         - comment: Outbound PAT
-          matches: ["oifname {{ nftables_nic_wan }}"]
+          matches: ["oifname $interfaces_wan"]
           verdict: masquerade
     - name: wan
       member_interfaces:
-        - eno3
+        - vlan5
       input_policy: reject with icmpx type admin-prohibited
       input_rules:
         - comment: Rate Limit ICMP Echo-Requests
@@ -92,7 +90,7 @@ nftables_rulesets:
       forward_policy: reject with icmpx type admin-prohibited
     - name: man
       member_interfaces:
-        - vm-br-vl10 # management
+        - vlan10 # management
       input_policy: reject with icmpx type admin-prohibited
       input_rules:
         - comment: Border Gateway

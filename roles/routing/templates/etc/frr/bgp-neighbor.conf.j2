@@ -1,0 +1,85 @@
+{% if neighbor_data['interface'] | default(False) %}
+  neighbor {{ neighbor }} interface
+{% endif %}
+{% if neighbor_data['v6only'] | default(False) %}
+  neighbor {{ neighbor }} interface v6only
+{% endif %}
+{% if neighbor_data['is_peer_group'] | default(False) %}
+  neighbor {{ neighbor }} peer-group
+{% endif %}
+{% if neighbor_data['peer_group'] | default(False) %}
+  neighbor {{ neighbor }} peer-group {{ neighbor_data['peer_group'] }}
+{% endif %}
+{% if neighbor_data['asn'] | default(False) %}
+  neighbor {{ neighbor }} remote-as {{ neighbor_data['asn'] }}
+{% endif %}
+{% if neighbor_data['password'] | default(False) %}
+  neighbor {{ neighbor }} password {{ neighbor_data['password'] }}
+{% endif %}
+{% if neighbor_data['multihop'] | default(False) %}
+  neighbor {{ neighbor }} ebgp-multihop {{ neighbor_data['multihop'] }}
+{% endif %}
+{% if neighbor_data['default_originate'] | default(False) %}
+  neighbor {{ neighbor }} default-originate
+{% endif %}
+{% if neighbor_data['description'] is defined %}
+  neighbor {{ neighbor }} description {{ neighbor_data['description'] }}
+{% endif %}
+{% if neighbor_data['next_hop_self'] | default(False) %}
+  neighbor {{ neighbor }} next-hop-self
+{% endif %}
+{% if neighbor_data['timers_connect'] | default(False) %}
+  neighbor {{ neighbor }} timers connect {{ neighbor_data['timers_connect'] }}
+{% endif %}
+{% if neighbor_data['bfd_peer'] | default(False) %}
+  neighbor {{ neighbor }} bfd
+{% endif %}
+{% if neighbor_data['other'] | default(False) %}
+{%   for option in neighbor_data['other'] %}
+  neighbor {{ neighbor }} {{ option }}
+{%   endfor %}
+{% endif %}
+!
+{% if neighbor_data['af_v4'] | default(False) %}
+  address-family ipv4 unicast
+{%   for option in neighbor_data['af_v4'] %}
+    neighbor {{ neighbor }} {{ option }}
+{%   endfor %}
+  exit-address-family
+!
+{% endif %}
+{%  if neighbor_data['af_v6'] | default(False) %}
+  address-family ipv6 unicast
+{%   for option in neighbor_data['af_v6'] %}
+    neighbor {{ neighbor }} {{ option }}
+{%   endfor %}
+  exit-address-family
+{% endif %}
+{% if neighbor_data['af_evpn'] | default(False) %}
+  address-family l2vpn evpn
+{%   for option in neighbor_data['af_evpn'] %}
+    neighbor {{ neighbor }} {{ option }}
+{%   endfor %}
+  exit-address-family
+{% endif %}
+!
+{% if neighbor_data['v4_route_reflector_client'] | default(False) or
+                neighbor_data['v4_route_map'] | default(False) %}
+  address-family ipv4 unicast
+{%   if neighbor_data['v4_route_reflector_client'] | default(False) %}
+    neighbor {{ neighbor }} route-reflector-client
+{%   endif %}
+{%   if neighbor_data['v4_route_map'] | default(False) %}
+{%     for _route_map in neighbor_data['v4_route_map'] %}
+    neighbor {{ neighbor }} route-map {{ _route_map }}
+{%     endfor %}
+{%   endif %}
+{%   if neighbor_data['route_map'] | default(False) %}
+{%     for _route_map in neighbor_data['route_map'] %}
+    neighbor {{ neighbor }} route-map {{ _route_map }}
+{%     endfor %}
+{%   endif %}
+
+  exit-address-family
+!
+{% endif %}

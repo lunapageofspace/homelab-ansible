@@ -21,10 +21,10 @@ frr_daemons:
   zebra: true
 
 frr_static:
-  172.22.0.0/25:
-    vm-br-vl10
-  172.22.1.0/25:
-    vm-br-vl20
+  172.22.0.0/24:
+    vlan10
+  172.22.4.0/24:
+    vlan14
 
 frr_bgp:
   asns:
@@ -35,14 +35,14 @@ frr_bgp:
           asn: 64627
           is_peer_group: true
           default_originate: false
-        172.22.0.10:
+        172.22.1.10:
           peer_group: kubernetes_nodes
           description: "amd64-server-b5915c.int.zynthovian.xyz"
-        172.22.0.11:
+        172.22.1.11:
           peer_group: kubernetes_nodes
           description: "amd64-server-7f97c6.int.zynthovian.xyz"
-        172.22.0.12:
+        172.22.1.12:
           peer_group: kubernetes_nodes
           description: "amd64-server-a2e7bb.int.zynthovian.xyz"
       listen_range:
-        172.22.0.0/25: kubernetes_nodes
+        172.22.1.0/24: kubernetes_nodes

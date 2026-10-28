@@ -1,0 +1,16 @@
+keepalived_instances:
+  internal:
+    virtual_router_id: 254
+    state: MASTER
+    priority: 250
+    version: 3
+    advert_int: 1
+    unicast_src_ip: 172.22.0.254/24
+    unicast_peers:
+      - 172.22.0.253
+    vips:
+      - 172.22.0.1/24 dev vlan10
+      - 172.22.4.1/24 dev vlan14
+    track_interfaces:
+      - vlan10
+      - vlan14

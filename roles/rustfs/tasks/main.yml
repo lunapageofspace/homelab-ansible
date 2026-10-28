@@ -47,8 +47,8 @@
     dest: "/var/lib/rustfs/{{ item.name }}"
     state: link
   loop:
-    - { name: "rustfs_cert.pem", source: "{{ certenroll_crt.filename }}" }
-    - { name: "rustfs_key.pem", source: "{{ certenroll_key.filename }}" }
+    - { name: "rustfs_cert.pem", source: "{{ certenroll_public_key_path }}" }
+    - { name: "rustfs_key.pem", source: "{{ certenroll_private_key_path }}" }
 
 - name: Permit rustfs to read the server x509 certificate
   # setfacl -m u:openbao:r /etc/pki/tls/private/{{ inventory_hostname }}.key
@@ -59,8 +59,8 @@
     state: present
     permissions: r
   loop:
-    - "{{ certenroll_key.filename }}"
-    - "{{ certenroll_crt.filename }}"
+    - "{{ certenroll_private_key_path }}"
+    - "{{ certenroll_public_key_path }}"
 
 - name: Deploy rustfs configuration
   # ! WHY IS THIS APP CONFIGURED ONLY WITH ENVIRONMENT VARS
@@ -80,7 +80,7 @@
     group: root
     mode: '0644'
 
-- name: Enable and start the Minio service
+- name: Enable and start the rustfs service
   ansible.builtin.service:
     name: rustfs
     state: started

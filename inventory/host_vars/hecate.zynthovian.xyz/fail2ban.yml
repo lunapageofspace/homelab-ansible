@@ -1,5 +1,5 @@
 fail2ban_ignoreips:
-  - 172.22.0.0/23
+  - 172.22.0.0/16
 
 fail2ban_jail_configuration:
   DEFAULT:

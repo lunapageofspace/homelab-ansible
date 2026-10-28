@@ -1,0 +1,80 @@
+---
+- name: Create group for talos
+  ansible.builtin.group:
+    system: true
+    name: "{{ talos_kms_service_account_group }}"
+
+- name: Create user for talos
+  ansible.builtin.user:
+    system: true
+    shell: /usr/sbin/nologin
+    create_home: true
+    home: "{{ talos_kms_key_path | dirname }}"
+    name: "{{ talos_kms_service_account_username }}"
+    group: "{{ talos_kms_service_account_group }}"
+
+- name: Ensure presence of container-tools
+  ansible.builtin.dnf:
+    name: container-tools
+    state: present
+
+
+# - name: Download talos talos-kms server binary
+#   ansible.builtin.get_url:
+#     url: https://github.com/siderolabs/kms-client/releases/download/v0.1.0/kms-server-linux-amd64
+#     dest: "/usr/local/bin/talos-kms"
+#     mode: "u+rx,g+rx,o+rx"
+#     owner: root
+#     group: root
+
+- name: Extract talos-kms server binary from container image
+  ansible.builtin.shell:
+    cmd: |
+      cid=$(podman create ghcr.io/siderolabs/kms-server:{{ talos_kms_release_tag }})
+      podman cp "$cid:/kms-server" /usr/local/bin/talos-kms
+      podman rm "$cid"
+      chown root:root /usr/local/bin/talos-kms
+      chmod 755 /usr/local/bin/talos-kms
+    creates: /usr/local/bin/talos-kms
+
+- name: Permit talos to read the server x509 certificate
+  ansible.posix.acl:
+    path: "{{ item }}"
+    entity: talos
+    etype: user
+    state: present
+    permissions: r
+  loop:
+    - "{{ certenroll_private_key_path }}"
+    - "{{ certenroll_private_key_path }}"
+
+- name: Source key material from prng
+  community.general.filesize:
+    path: "{{ talos_kms_key_path }}"
+    source: /dev/urandom
+    size: 32B
+    owner: "{{ talos_kms_service_account_username }}"
+    group: "{{ talos_kms_service_account_group }}"
+    mode: '0600'
+
+- name: Deploy talos-kms as systemd service
+  ansible.builtin.copy:
+    content: "{{ lookup('template', 'service.j2') }}"
+    dest: /etc/systemd/system/talos-kms.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable and start the talos-kms service
+  ansible.builtin.service:
+    name: talos-kms
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: Open port for talos-kms
+  ansible.posix.firewalld:
+    port: "{{ talos_kms_api_port }}/tcp"
+    state: enabled
+    immediate: true
+    permanent: true

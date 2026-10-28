@@ -23,7 +23,7 @@ frr_os_rpm: false
 # Defines FRR rpm repo
 # https://rpm.frrouting.org/
 frr_rpm_version: frr-stable
-frr_rpm_repository: "https://rpm.frrouting.org/repo/{{ frr_rpm_version }}-repo-1-0.el{{ ansible_distribution_major_version }}.noarch.rpm"
+frr_rpm_repository: "https://rpm.frrouting.org/repo/{{ frr_rpm_version }}-repo.el{{ ansible_distribution_major_version }}.noarch.rpm"
 
 # Defines FRR version to install
 # https://github.com/FRRouting/frr/releases

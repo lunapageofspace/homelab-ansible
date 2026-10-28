@@ -9,9 +9,9 @@
       ansible.builtin.include_role:
         name: misc
 
-    - name: Configures SSHd and deploys certificate trust
-      ansible.builtin.include_role:
-        name: sshd
+#    - name: Configures SSHd and deploys certificate trust
+#      ansible.builtin.include_role:
+#        name: sshd
 
     - name: Deploy local certificate authority
       ansible.builtin.include_role:

@@ -4,31 +4,32 @@ flush ruleset
 # Fully Qualified Verdict Name for logging
 # nft.<hook>.<zone>.<verdict>
 
-define nic_wan = {{ nftables_nic_wan }}
-define nic_lan = {{ nftables_nic_lan }}
-define nic_man = {{ nftables_nic_man }}
-define nic_vpn = {{ nftables_nic_vpn }}
+{% for zone in nftables_rulesets.zones %}
+define interfaces_{{ zone.name }} = {
+{%   for interface in zone.member_interfaces %}
+      {{ interface }},
+{%   endfor %}
+}
+{% endfor %}
 
 table inet primary {
     chain input_dispatch {
       type filter hook input priority 0; policy drop;
       iiftype loopback accept comment "Accept any loopback traffic"
-      
+
       # -{ Conntrack Verdict Map }
       ct state vmap {
         new: continue, invalid: drop,
         established: accept, related: accept
       } comment "Accept established and related connections"
 
+      #-{ Dispatch interfaces by zone }
 {% for zone in nftables_rulesets.zones %}
 {%   if zone.input_rules is defined or zone.input_policy is defined %}
-      #-{ Dispatch {{ zone.name }} interfaces }
-{%     for interface in zone.member_interfaces %}
-      meta iifname {{ interface }} jump input_zone_{{ zone.name }}
-{%     endfor %}
-
+      meta iifname $interfaces_{{ zone.name }} jump input_zone_{{ zone.name }}
 {%   endif %}
 {% endfor %}
+
       # -{Final Verdict of incoming connections}
       counter log prefix "nft.input.dispatch.reject " reject with icmpx type admin-prohibited
     }
@@ -63,7 +64,7 @@ table inet primary {
 
     chain forward_dispatch {
       type filter hook forward priority 0; policy drop;
-      
+
       # -{ Conntrack Verdict Map }
       ct state vmap {
           new: continue, invalid: drop,
@@ -73,9 +74,7 @@ table inet primary {
 {% for zone in nftables_rulesets.zones %}
 {%   if zone.forward_rules is defined or zone.forward_policy is defined %}
       #-{ Dispatch {{ zone.name }} interfaces }
-{%     for interface in zone.member_interfaces %}
-      meta iifname {{ interface }} jump forward_zone_{{ zone.name }}
-{%     endfor %}
+      meta iifname $interfaces_{{ zone.name }} jump forward_zone_{{ zone.name }}
 
 {%   endif %}
 {% endfor %}
@@ -116,9 +115,7 @@ table inet primary {
 {% for zone in nftables_rulesets.zones %}
 {%   if zone.prerouting_rules is defined %}
       #-{ Dispatch {{ zone.name }} interfaces }
-{%     for interface in zone.member_interfaces %}
-      meta iifname {{ interface }} jump prerouting_zone_{{ zone.name }}
-{%     endfor %}
+      meta iifname $interfaces_{{ zone.name }} jump prerouting_zone_{{ zone.name }}
 {%   endif %}
 {% endfor %}
     }
@@ -146,9 +143,7 @@ table inet primary {
 {% for zone in nftables_rulesets.zones %}
 {%   if zone.postrouting_rules is defined %}
       #-{ Dispatch {{ zone.name }} interfaces }
-{%     for interface in zone.member_interfaces %}
-      meta iifname {{ interface }} jump postrouting_zone_{{ zone.name }}
-{%     endfor %}
+      meta iifname $interfaces_{{ zone.name }} jump postrouting_zone_{{ zone.name }}
 {%   endif %}
 {% endfor %}
     }
@@ -172,14 +167,14 @@ table inet primary {
 {% endfor %}
 }
 
-table inet suricata {
-  # -{Support table for suricata IPS}
-  chain ips-filter-input {
-    type filter hook input priority -10;
-    iifname $nic_wan queue bypass
-  }
-  chain ips-filter-forward {
-    type filter hook forward priority -10;
-    iifname $nic_wan queue bypass
-  }
-}
+#table inet suricata {
+#  # -{Support table for suricata IPS}
+#  chain ips-filter-input {
+#    type filter hook input priority -10;
+#    iifname $nic_wan queue bypass
+#  }
+#  chain ips-filter-forward {
+#    type filter hook forward priority -10;
+#    iifname $nic_wan queue bypass
+#  }
+#}

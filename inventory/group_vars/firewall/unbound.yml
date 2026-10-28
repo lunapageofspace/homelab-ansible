@@ -1,74 +1,3 @@
-kubernetes_dns_key: !vault |
-  $ANSIBLE_VAULT;1.1;AES256
-  66616537323333353635353763306138306532353663663338643730323864383839373363643932
-  6332306639313133373762646133346633636237393534350a363637336239343737656237653631
-  66376663663432623865616331666639643731653761303336393930303136353634663034343463
-  3862613964303663360a326239323064333835346366663735306633383761346639643664346638
-  37643436336632623965343135633064636330303564396563653763656531366332303138643265
-  6234363737386533633562616364343731633834376335333966
-
-nsd_server_options_files:
-  - name: ansible-server
-    content: |
-      ip-transparent: yes
-      ip-freebind: yes
-      reuseport: yes
-      #verbosity: 1
-      port: 5053
-
-__nsd_allowed_acl:
-  - 127.0.0.1/32
-  - 172.22.0.10/32
-  - 172.22.0.11/32
-  - 172.22.0.12/32
-
-nsd_options_files:
-  - name: zynthovian-xyz
-    content: |
-      key:
-        name: kubernetes
-        algorithm: hmac-sha256
-        secret: "{{ kubernetes_dns_key }}"
-      zone:
-        name: zynthovian.xyz
-        zonefile: zynthovian-xyz.zone
-        {% for i in __nsd_allowed_acl %}
-        allow-notify: {{ i }} kubernetes
-        provide-xfr: {{ i }} kubernetes
-        {% endfor %}
-
-nsd_zone_files:
-  - name: zynthovian-xyz
-    zonename: zynthovian.xyz.
-    content: |
-      $ORIGIN .
-      $TTL 30
-      zynthovian.xyz          IN SOA  ns.zynthovian.xyz. elliana.perry.gmail.com. (
-                                      2023060878 ; serial
-                                      300        ; refresh (5 minutes)
-                                      3600       ; retry (1 hour)
-                                      604800     ; expire (1 week)
-                                      300        ; minimum (5 minutes)
-                                      )
-                              NS      ns.zynthovian.xyz.
-      $ORIGIN zynthovian.xyz.
-      $TTL 30
-      ingress                 A       172.21.0.1
-      ns                      A       172.22.0.1
-                              A       172.22.0.21
-                              A       172.22.0.120
-                              A       172.22.1.1
-      amd64-server-7f97c6     A       172.22.0.11
-      amd64-server-a2e7bb     A       172.22.0.12
-      amd64-server-b5915c     A       172.22.0.10
-      xenia                   A       172.22.0.20
-      legion                  A       172.22.1.5
-      dragon                  A       172.22.0.120
-                              A       172.22.0.121
-                              A       172.22.1.120
-                              A       172.22.1.121
-      ; end of file (nsd-checkzone fails without this?)
-
 unbound_config_d:
   - name: server-config.conf
     content: |
@@ -76,7 +5,7 @@ unbound_config_d:
         chroot: ""
         # Configure interfaces
         ip-freebind: yes
-        #interface: 0.0.0.0
+        interface: 0.0.0.0
         # Configure ACLs
         access-control: 0.0.0.0/0 allow
 
@@ -109,7 +38,7 @@ unbound_config_d:
         forward-addr: 8.8.8.8
       forward-zone:
         name: "zynthovian.xyz"
-        forward-addr: 127.0.0.1@2053
+        forward-addr: 172.22.0.20
   - name: inet-fwd-zone.conf
     content: |
         forward-zone:

@@ -1,6 +1,10 @@
 ---
 # Variables for configuring the general system
 
+certenroll_private_key_path: /etc/pki/tls/private/{{ inventory_hostname }}.key.pem
+certenroll_public_key_path: /etc/pki/tls/certs/{{ inventory_hostname }}.crt.pem
+certenroll_request_path: /etc/pki/tls/certs/{{ inventory_hostname }}.csr.pem
+
 misc_allow_sudo_nopasswd:
   - ansible
   - elliana

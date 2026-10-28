@@ -7,7 +7,7 @@
     - name: Spool in tasks for FRR on RHEL-like distributions
       ansible.builtin.include_tasks: redhat.yml
       when:
-        - ansible_os_family == "RedHat"
+        - ansible_facts['os_family'] == "RedHat"
 
     - name: Spool in system tuning tasks
       ansible.builtin.include_tasks: system_tuning.yml

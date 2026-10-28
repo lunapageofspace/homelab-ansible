@@ -1,0 +1,58 @@
+---
+general_system_packages:
+  - zsh
+  - git
+  - wget
+  - curl
+  - htop
+  - stow
+
+controlled_files:
+  # Files that I have modified by hand
+  - '/etc/NetworkManager/system-connections/eno8.10.nmconnection'
+  - '/etc/NetworkManager/system-connections/eno8.14.nmconnection'
+  - '/etc/NetworkManager/system-connections/vlan10.nmconnection'
+  - '/etc/NetworkManager/system-connections/vlan14.nmconnection'
+  - '/etc/NetworkManager/system-connections/wan-eno1.nmconnection'
+  - '/etc/NetworkManager/system-connections/wan-eno2.nmconnection'
+  - '/etc/NetworkManager/system-connections/wan.nmconnection'
+  #  merged with files modified by modules called in plays
+  - '/etc/logrotate.d/nftables' # Managed by arillso.logrotate
+
+certenroll:
+  organization_name: Zynthovian Interstellar Union
+  organizational_unit_name: Digital Infrastructure Services
+  subject_alt_names: [ 'DNS:hecate.zynthovian.xyz' ]
+  cert: |
+    -----BEGIN CERTIFICATE REQUEST-----
+    MIIBnzCCASQCAQAwcjEmMCQGA1UECgwdWnludGhvdmlhbiBJbnRlcnN0ZWxsYXIg
+    VW5pb24xKDAmBgNVBAsMH0RpZ2l0YWwgSW5mcmFzdHJ1Y3R1cmUgU2VydmljZXMx
+    HjAcBgNVBAMMFWhlY2F0ZS56eW50aG92aWFuLnh5ejB2MBAGByqGSM49AgEGBSuB
+    BAAiA2IABKUA6Ux/lvS/vlrYcEtzalNek2qkbfMKtlLo0Z1b6vNgStbO/jpkiesH
+    Xauz2+j8uqqBoTCUPMZg1mP5pcPeJijyAr4YKA0ueOpCWUOT72aTpD886uQWuV1t
+    eykEuokWyaAzMDEGCSqGSIb3DQEJDjEkMCIwIAYDVR0RBBkwF4IVaGVjYXRlLnp5
+    bnRob3ZpYW4ueHl6MAoGCCqGSM49BAMCA2kAMGYCMQDfh1MGaqs2j/e0+vGJukEy
+    HhkzcSatZQIyg5ECJ/+HXLxKf3RROTRHVD248tue/D0CMQDY/1LNljIbM7e95ULD
+    YBRRo6A54GxkMF32ocpdG0nTjXwU+c8HFkUTjaYXoKlShWw=
+    -----END CERTIFICATE REQUEST-----
+  trust_anchors:
+    - name: ziu-homelab-root
+      content: |
+        -----BEGIN CERTIFICATE-----
+        MIIC9zCCAn6gAwIBAgIUP+m/ni51/ZkzdW8Y3GPJulrT/2kwCgYIKoZIzj0EAwMw
+        eTEmMCQGA1UECgwdWnludGhvdmlhbiBJbnRlcnN0ZWxsYXIgVW5pb24xKDAmBgNV
+        BAsMH0RpZ2l0YWwgSW5mcmFzdHJ1Y3R1cmUgU2VydmljZXMxJTAjBgNVBAMMHFJv
+        b3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMjQwOTE2MDAwMDAwWhcNMzQw
+        OTE4MDAwMDAwWjB5MSYwJAYDVQQKDB1aeW50aG92aWFuIEludGVyc3RlbGxhciBV
+        bmlvbjEoMCYGA1UECwwfRGlnaXRhbCBJbmZyYXN0cnVjdHVyZSBTZXJ2aWNlczEl
+        MCMGA1UEAwwcUm9vdCBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTB2MBAGByqGSM49
+        AgEGBSuBBAAiA2IABNiyroVO4PiMV8iQBv2ER0Qb/RdsX5k3OmAtaH4pIhyLcXHe
+        8MdzYdMmnKJKHCBH24cXUQPX1Hm8uq1afxt3yYIVJyzcXXef/3xz2Y0uSpXZrBoJ
+        mNqbtCtD8pAL2Oq5G6OBxjCBwzAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUw
+        AwEB/zAdBgNVHQ4EFgQU8ywVEcGb+Wz3akgNXLymh9gu474wHwYDVR0jBBgwFoAU
+        8ywVEcGb+Wz3akgNXLymh9gu474wNAYHKwYBBAF6AQQpDCdFbGxpYW5hIFBlcnJ5
+        IDxlbGxpYW5hLnBlcnJ5QGdtYWlsLmNvbT4wKgYHKwYBBAF6AgQfDB1Ib21lbGFi
+        IENlcnRpZmljYXRlIEF1dGhvcml0eTAKBggqhkjOPQQDAwNnADBkAjA7ajmZIkDL
+        lpWWCbeYajQax59Xuv96kqVLKEHGtBmX9C9t0SJdXTiYQgFrwWvI+7YCMAc4mku6
+        YHUmHnwIv1aE1uDJgENEg+0JPHYzuV+dSn0RIEmoq8FvNmlf1Cqs1wzlZA==
+        -----END CERTIFICATE-----

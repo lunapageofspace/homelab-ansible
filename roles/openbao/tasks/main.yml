@@ -28,8 +28,8 @@
     state: present
     permissions: r
   loop:
-    - "{{ certenroll_key.filename }}"
-    - "{{ certenroll_crt.filename }}"
+    - "{{ certenroll_private_key_path }}"
+    - "{{ certenroll_public_key_path }}"
 
 - name: Ensure presence of configured data directory
   ansible.builtin.file:

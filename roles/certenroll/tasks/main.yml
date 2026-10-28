@@ -18,17 +18,17 @@
   notify: x509 trust anchor added
 
 - name: Generate private key
+  when: not certenroll.cert
   block:
     - name: Generate private key
       community.crypto.openssl_privatekey:
-        path: /etc/pki/tls/private/{{ inventory_hostname }}.key.pem
+        path: "{{ certenroll_private_key_path }}"
         type: ECC
         curve: secp384r1
         backup: true
         owner: root
         group: root
         mode: "0600"
-        force: "{{ certenroll_force_keygen | default(false) }}"
       register: certenroll_key
 
     - name: Report private key
@@ -46,16 +46,15 @@
   block:
     - name: Generate CSR for renewal
       community.crypto.openssl_csr:
-        path: /etc/pki/tls/certs/{{ inventory_hostname }}.csr.pem
-        privatekey_path: /etc/pki/tls/private/{{ inventory_hostname }}.key.pem
+        path: "{{ certenroll_request_path }}"
+        privatekey_path: "{{ certenroll_private_key_path }}"
         organization_name: "{{ certenroll.organization_name }}"
         organizational_unit_name: "{{ certenroll.organizational_unit_name }}"
         common_name: "{{ inventory_hostname }}"
-        subject_alt_name: |
-          DNS:{{ inventory_hostname }}
+        subject_alt_name: "{{ certenroll.subject_alt_names }}"
       register: certenroll_csr
 
-    - name: "Read a file content"
+    - name: "Read csr file content"
       ansible.builtin.shell: |
         cat {{ certenroll_csr.filename }}
       changed_when: false
@@ -68,7 +67,7 @@
     - name: Ingest signed certificate
       ansible.builtin.copy:
         content: "{{ certenroll.cert | default('PLACEHOLDER') }}"
-        dest: /etc/pki/tls/certs/{{ inventory_hostname }}.crt.pem
+        dest: "{{ certenroll_public_key_path }}"
         owner: root
         group: root
         mode: "0644"

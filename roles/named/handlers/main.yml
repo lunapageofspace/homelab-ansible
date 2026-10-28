@@ -1,0 +1,16 @@
+# /var/named/zones/zynthovian.xyz.jnl
+- name: Remove cached zone
+  ansible.builtin.file:
+    path: "/var/named/zones/{{ item.name }}.jnl"
+    state: absent
+  become: true
+  loop: "{{ named_zone_files }}"
+  listen: "restart named"
+
+- name: Restart BIND
+  ansible.builtin.service:
+    name: named
+    state: restarted
+    enabled: true
+  become: true
+  listen: "restart named"

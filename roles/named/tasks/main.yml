@@ -1,0 +1,77 @@
+---
+- name: Install ISC Bind9
+  notify: "restart named"
+  ansible.builtin.dnf:
+    name: bind
+    state: present
+
+- name: Create zones folder for bind
+  notify: "restart named"
+  ansible.builtin.file:
+    path: /var/named/zones
+    state: directory
+    owner: named
+    group: named
+    mode: "u=rwx,g=rwx,o="
+
+- name: Template zonefiles
+  notify: "restart named"
+  loop: "{{ named_zone_files }}"
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: "/var/named/zones/{{ item.name }}.db"
+    owner: named
+    group: named
+    mode: "u=r,g=r,o="
+
+- name: Template BIND configuration
+  notify: "restart named"
+  ansible.builtin.copy:
+    content: "{{ lookup('template', 'named.conf.j2') }}"
+    dest: "/etc/named.conf"
+    owner: root
+    group: named
+    mode: "u=rw,g=r,o="
+
+- name: Template BIND drop-in configuration
+  notify: "restart named"
+  loop: "{{ named_includes }}"
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: "/etc/named/{{ item.name }}"
+    owner: root
+    group: named
+    mode: "u=rw,g=r,o="
+
+# - name: Ensure selinux allows the port to be bound
+#   ansible.builtin.include_role:
+#     name: fedora.linux_system_roles.selinux
+#   vars:
+#     selinux_ports:
+#       - ports: "{{ named_listening_port }}"
+#         proto: udp
+#         setype: dns_port_t
+#         state: present
+#         local: true
+#       - ports: "{{ named_listening_port }}"
+#         proto: tcp
+#         setype: dns_port_t
+#         state: present
+#         local: true
+
+- name: Open listening port for named
+  ansible.posix.firewalld:
+    immediate: true
+    permanent: true
+    port: "{{ named_listening_port }}/{{ item }}"
+    state: enabled
+  loop:
+    - tcp
+    - udp
+
+- name: Enable and start the named service
+  ansible.builtin.service:
+    name: named
+    state: started
+    enabled: true
+    daemon_reload: true

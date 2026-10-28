@@ -1,0 +1,142 @@
+---
+kea_control_agent_config:
+  control-sockets:
+    d2:
+      socket-name: /var/run/kea/ddns.socket
+      socket-type: unix
+    dhcp4:
+      socket-name: /var/run/kea/dhcp4.socket
+      socket-type: unix
+    dhcp6:
+      socket-name: /var/run/kea/dhcp6.socket
+      socket-type: unix
+  http-host: 172.22.0.254
+  http-port: 8647
+  loggers:
+    - debuglevel: 0
+      name: kea-ctrl-agent
+      output_options:
+        - flush: true
+          maxsize: 204800
+          maxver: 4
+          output: /var/log/kea/ctrl-agent.log
+      severity: INFO
+
+kea_ddns_config: {}
+
+kea_dhcp6_config:
+  control-socket:
+    socket-name: /var/run/kea/dhcp6.socket
+    socket-type: unix
+  interfaces-config:
+    interfaces:
+      - vlan10
+      - vlan14
+  lease-database:
+    type: memfile
+  loggers:
+    - name: kea-dhcp6
+      debuglevel: 0
+      output_options:
+        - maxsize: 2048000
+          maxver: 4
+          output: /var/log/kea/dhcp6.log
+      severity: INFO
+  rebind-timer: 32400
+  renew-timer: 21600
+  host-reservation-identifiers:
+    - hw-address
+    - duid
+  mac-sources:
+    - duid
+    - ipv6-link-local
+  subnet6:
+    - id: 10
+      interface: vlan10
+      subnet: fd4e:df98:5835:4f08::/64
+      # option-data:
+      #   - name: dns-servers
+      #     data: fd4e:df98:5835:4f08:9a54:2bf5:27f6:c855
+    - id: 14
+      interface: vlan14
+      subnet: fd4e:df98:5835:25c2::/64
+      # option-data:
+      #   - name: dns-servers
+      #     data: fd4e:df98:5835:25c2:5792:4069:a2eb:5aee
+
+kea_dhcp4_config:
+  control-socket:
+    socket-name: /var/run/kea/dhcp4.socket
+    socket-type: unix
+  expired-leases-processing:
+    hold-reclaimed-time: 172800
+    max-reclaim-leases: 0
+    max-reclaim-time: 0
+    reclaim-timer-wait-time: 3600
+  hooks-libraries:
+    - library: /usr/lib64/kea/hooks/libdhcp_lease_cmds.so
+  interfaces-config:
+    interfaces:
+      - vlan10
+      - vlan14
+  lease-database:
+    type: memfile
+  loggers:
+    - debuglevel: 0
+      name: kea-dhcp4
+      output_options:
+        - maxsize: 2048000
+          maxver: 4
+          output: /var/log/kea/dhcp4.log
+      severity: INFO
+  rebind-timer: 32400
+  renew-timer: 21600
+  valid-lifetime: 43200
+  subnet4:
+    - id: 10
+      interface: vlan10
+      option-data:
+        - data: 172.22.0.254
+          name: routers
+        - data: 172.22.0.254
+          name: domain-name-servers
+        - name: "domain-search"
+          data: "zynthovian.xyz"
+      pools:
+        - pool: 172.22.0.20-172.22.0.99
+      reservations:
+        - hostname: hecate-ipmi.zynthovian.xyz
+          hw-address: 3c:ec:ef:41:7c:be
+          ip-address: 172.22.0.3
+        - hostname: apollon.zynthovian.xyz
+          hw-address: e4:5f:01:24:c8:30
+          ip-address: 172.22.0.4
+        - hostname: cap.zynthovian.xyz
+          hw-address: d4:01:c3:67:aa:3f
+          ip-address: 172.22.0.5
+        - hostname: amd64-server-b5915c.zynthovian.xyz
+          hw-address: b8:85:84:b5:91:5c
+          ip-address: 172.22.0.10
+        - hostname: amd64-server-7f97c6.zynthovian.xyz
+          hw-address: d8:9e:f3:7f:97:c6
+          ip-address: 172.22.0.11
+        - hostname: amd64-server-a2e7bb.zynthovian.xyz
+          hw-address: b8:85:84:a2:e7:bb
+          ip-address: 172.22.0.12
+      subnet: 172.22.0.0/24
+    - id: 14
+      interface: vlan14
+      option-data:
+        - data: 172.22.4.254
+          name: routers
+        - data: 172.22.4.254
+          name: domain-name-servers
+        - name: "domain-search"
+          data: "zynthovian.xyz"
+      pools:
+        - pool: 172.22.4.10-172.22.4.220
+      reservations:
+        - hostname: legion.zynthovian.xyz
+          hw-address: 98:b7:85:00:2e:d4
+          ip-address: 172.22.4.5
+      subnet: 172.22.4.0/24

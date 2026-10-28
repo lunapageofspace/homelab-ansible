@@ -3,8 +3,8 @@
   ansible.builtin.template:
     src: kea-dhcp-ddns.conf
     dest: /etc/kea/kea-dhcp-ddns.conf
-    owner: root
-    group: root
+    owner: kea
+    group: kea
     mode: u=rw,g=r,o=
     # Fobidden mode?
     # mode: 0644

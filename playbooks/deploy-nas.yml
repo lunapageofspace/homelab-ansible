@@ -1,5 +1,5 @@
 ---
-- name: NAS + KMS Provisioning
+- name: NAS + KMS + Nameserver Provisioning
   hosts: "{{ target_hosts | default('storage') }}"
   become: true
   gather_facts: true
@@ -10,9 +10,13 @@
       ansible.builtin.include_role:
         name: certenroll
 
-    - name: Install OpenBao
+    #- name: Install OpenBao Secret Vault
+    #  ansible.builtin.include_role:
+    #    name: openbao
+
+    - name: Install Talos Network-Bound Disk Encryption KMS
       ansible.builtin.include_role:
-        name: openbao
+        name: talos-kms
 
     - name: Install and configure NFS
       block:
@@ -27,10 +31,13 @@
             state: enabled
             service: nfs
 
-    - name: Install RustFS
-      ansible.builtin.include_role:
-        name: rustfs
+    # - name: Install RustFS
+    #   ansible.builtin.include_role:
+    #     name: rustfs
 
+    - name: Install and configure named
+      ansible.builtin.include_role:
+        name: named
 
 # TODO
 # - Set up ssh disk unlocking?

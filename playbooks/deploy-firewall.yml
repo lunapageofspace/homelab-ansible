@@ -16,7 +16,7 @@
       ansible.builtin.include_role:
         name: nftables
 
-    - name: Configure Recursive and Authoritative DNS infrastructure
+    - name: Configure Recursive DNS infrastructure
       ansible.builtin.include_role:
         name: nameservice
 
