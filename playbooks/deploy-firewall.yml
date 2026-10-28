@@ -8,7 +8,7 @@
     - name: Template NFTables rules into string
       ansible.builtin.set_fact:
         nftables_rules_raw:
-          "{{ lookup('template', 'nftables/new_main.nft') }}"
+          "{{ lookup('template', 'nftables/main.nft') }}"
 
   tasks:
 
